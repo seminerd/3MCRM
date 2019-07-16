@@ -1,10 +1,13 @@
 package com.sapo.team03.MCRM.Model;
 
-//import java.time.LocalDate;
+import java.time.LocalDate;
+import java.util.Set;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "khachhang")
@@ -13,33 +16,65 @@ public class Customer {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private Long id;
-	@NotNull
 	@Column(name = "ten")
 	private String name;
 	@Column(name = "email")
-	private String mail;
+	private String email;
 	@Column(name = "dien_thoai")
+	@Size(max = 12)
 	private String phoneNumber;
 	@Column(name = "nhomkh")
 	private String group;
 	@Column(name = "gioi_tinh")
-	private String gender;
+	private Integer gender;
 	@Column(name = "ngay_sinh")
-	private String dob;
+	private LocalDate dob;
 	@Column(name = "cong_no")
-	private String debt;
+	private Double debt;
 	@Column(name = "dia_chi")
 	private String address;
-//	@NotNull
-//	@ManyToOne
-//	@JoinColumn(name = "idnv")
-	@Column(name = "idnv")
-	private String staffId;
+
+	// foreign key
+	@ManyToOne
+	@JoinColumn(name = "idnv_kh")
+	private Staff staff;
+
 	@Column(name = "ghi_chu")
 	private String note;
 	@Column(name = "uu_tien")
-	@Min(0)
 	private Integer priority;
+
+	@OneToOne(mappedBy = "customerMail")
+	private Mail mail;
+
+	@JsonBackReference("a")
+	@OneToMany(mappedBy = "customerDH")
+	private Set<DonHang> donhang;
+
+	@JsonBackReference("b")
+	@OneToMany(mappedBy = "customerGD")
+	private Set<GiaoDichKhachHang> gdkh;
+
+	public Customer() {
+		super();
+	}
+
+	public Customer(String name, String email, @Size(max = 12) String phoneNumber, String group, Integer gender,
+			LocalDate dob, Double debt, String address, Staff staff, String note, Integer priority) {
+		super();
+
+		this.name = name;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.group = group;
+		this.gender = gender;
+		this.dob = dob;
+		this.debt = debt;
+		this.address = address;
+		this.staff = staff;
+		this.note = note;
+		this.priority = priority;
+	}
 
 	public Long getId() {
 		return id;
@@ -47,10 +82,6 @@ public class Customer {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public void setPriority(Integer priority) {
-		this.priority = priority;
 	}
 
 	public String getName() {
@@ -61,12 +92,12 @@ public class Customer {
 		this.name = name;
 	}
 
-	public String getMail() {
-		return mail;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setMail(String mail) {
-		this.mail = mail;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPhoneNumber() {
@@ -85,21 +116,29 @@ public class Customer {
 		this.group = group;
 	}
 
-//	public LocalDate getDob() {
-//		return dob;
-//	}
-//
-//	public void setDob(LocalDate dob) {
-//		this.dob = dob;
-//	}
-//
-//	public double getDebt() {
-//		return debt;
-//	}
-//
-//	public void setDebt(double debt) {
-//		this.debt = debt;
-//	}
+	public Integer getGender() {
+		return gender;
+	}
+
+	public void setGender(Integer gender) {
+		this.gender = gender;
+	}
+
+	public LocalDate getDob() {
+		return dob;
+	}
+
+	public void setDob(LocalDate dob) {
+		this.dob = dob;
+	}
+
+	public Double getDebt() {
+		return debt;
+	}
+
+	public void setDebt(Double debt) {
+		this.debt = debt;
+	}
 
 	public String getAddress() {
 		return address;
@@ -108,14 +147,14 @@ public class Customer {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-//
-//	public Long getStaffId() {
-//		return staffId;
-//	}
-//
-//	public void setStaffId(Long staffId) {
-//		this.staffId = staffId;
-//	}
+
+	public Staff getStaff() {
+		return staff;
+	}
+
+	public void setStaff(Staff staff) {
+		this.staff = staff;
+	}
 
 	public String getNote() {
 		return note;
@@ -125,75 +164,79 @@ public class Customer {
 		this.note = note;
 	}
 
-	public int getPriority() {
+	public Integer getPriority() {
 		return priority;
 	}
 
-	public void setPriority(int priority) {
+	public void setPriority(Integer priority) {
 		this.priority = priority;
 	}
 
-	public String getGender() {
-		return gender;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((dob == null) ? 0 : dob.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
+		return result;
 	}
 
-	public void setGender(String gender) {
-		this.gender = gender;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Customer other = (Customer) obj;
+		if (dob == null) {
+			if (other.dob != null)
+				return false;
+		} else if (!dob.equals(other.dob))
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (phoneNumber == null) {
+			if (other.phoneNumber != null)
+				return false;
+		} else if (!phoneNumber.equals(other.phoneNumber))
+			return false;
+		return true;
 	}
 
-	public String getDob() {
-		return dob;
+	public Mail getMail() {
+		return mail;
 	}
 
-	public void setDob(String dob) {
-		this.dob = dob;
-	}
-
-	public String getDebt() {
-		return debt;
-	}
-
-	public void setDebt(String debt) {
-		this.debt = debt;
-	}
-
-	public String getStaffId() {
-		return staffId;
-	}
-
-	public void setStaffId(String staffId) {
-		this.staffId = staffId;
-	}
-
-	public Customer(Long id, @NotNull String name, String mail, String phoneNumber, String group, String gender,
-			String dob, String debt, String address, String staffId, String note, @Min(0) Integer priority) {
-		super();
-		this.id = id;
-		this.name = name;
+	public void setMail(Mail mail) {
 		this.mail = mail;
-		this.phoneNumber = phoneNumber;
-		this.group = group;
-		this.gender = gender;
-		this.dob = dob;
-		this.debt = debt;
-		this.address = address;
-		this.staffId = staffId;
-		this.note = note;
-		this.priority = priority;
 	}
 
-	public Customer() {
-		super();
+	public Set<DonHang> getDonhang() {
+		return donhang;
 	}
 
-//	public int getGender() {
-//		return gender;
-//	}
-//
-//	public void setGender(int gender) {
-//		this.gender = gender;
-//	}
-	
-	
+	public void setDonhang(Set<DonHang> donhang) {
+		this.donhang = donhang;
+	}
+
+	public Set<GiaoDichKhachHang> getGdkh() {
+		return gdkh;
+	}
+
+	public void setGdkh(Set<GiaoDichKhachHang> gdkh) {
+		this.gdkh = gdkh;
+	}
 
 }
