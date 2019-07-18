@@ -3,11 +3,19 @@ package com.sapo.team03.MCRM.Model;
 import java.time.LocalDate;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "khachhang")
@@ -23,8 +31,8 @@ public class Customer {
 	@Column(name = "dien_thoai")
 	@Size(max = 12)
 	private String phoneNumber;
-	@Column(name = "nhomkh")
-	private String group;
+	@Column(name = "idnhom_kh")
+	private Integer group;
 	@Column(name = "gioi_tinh")
 	private Integer gender;
 	@Column(name = "ngay_sinh")
@@ -59,7 +67,7 @@ public class Customer {
 		super();
 	}
 
-	public Customer(String name, String email, @Size(max = 12) String phoneNumber, String group, Integer gender,
+	public Customer(String name, String email, @Size(max = 12) String phoneNumber,Integer group, Integer gender,
 			LocalDate dob, Double debt, String address, Staff staff, String note, Integer priority) {
 		super();
 
@@ -108,11 +116,11 @@ public class Customer {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public String getGroup() {
+	public Integer getGroup() {
 		return group;
 	}
 
-	public void setGroup(String group) {
+	public void setGroup(Integer group) {
 		this.group = group;
 	}
 

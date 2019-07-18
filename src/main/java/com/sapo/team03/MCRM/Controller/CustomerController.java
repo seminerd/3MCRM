@@ -4,40 +4,37 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sapo.team03.MCRM.DAO.CustomerDAO;
-import com.sapo.team03.MCRM.DAO.StaffDAO;
 import com.sapo.team03.MCRM.Model.Customer;
-import com.sapo.team03.MCRM.Model.Staff;
-import com.sapo.team03.MCRM.Utils.Notification;
+import com.sapo.team03.MCRM.Utils.Utilities;
 
-@RestController("/")
-public class Controller {
+@RestController(value = "customers")
+public class CustomerController {
 	@Autowired
 	CustomerDAO customerDAO;
 	@Autowired
-	StaffDAO staffDAO;
+	Utilities util;
 
-	@GetMapping("customers")
+	@GetMapping("customers/list")
 	public List<Customer> getAll() {
 		return customerDAO.findAll();
 	}
 
-	@GetMapping("staffs")
-	public List<Staff> getAllStaff() {
-		return staffDAO.findAll();
-	}
-
-	@RequestMapping(value="customers/123",method=RequestMethod.POST)
+	@RequestMapping(value = "customers/add", method = RequestMethod.POST)
 	public void addCustomer(@RequestBody Customer customer) {
-		customerDAO.addCustomer( customer.getName(), customer.getEmail(), customer.getPhoneNumber(),
-				customer.getGroup(), customer.getGender(), customer.getDob(), customer.getDebt(),
-				customer.getAddress());
-		System.out.println("aaaaaaaaaaaaâ");
-		
+		customerDAO.addCustomer(customer.getName(), customer.getEmail(), customer.getPhoneNumber(), customer.getGroup(),
+				customer.getGender(), customer.getDob(), customer.getDebt(), customer.getAddress());
+		util.log("Added Successfully");
+
+	}
+	@GetMapping("customers/{id}")
+	public Customer findCustomerById(@PathVariable("id") long id) {
+		return customerDAO.findCustomerById(id);
 	}
 }

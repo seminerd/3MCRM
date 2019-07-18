@@ -33,15 +33,15 @@ public class Staff {
 	@OneToMany(mappedBy = "staff")
 	@JsonBackReference("c")
 	private Set<Customer> customers;
-	
+
 	@JsonBackReference("d")
 	@OneToMany(mappedBy = "staffDH")
 	private Set<DonHang> donhang;
-	
+
 	@JsonBackReference("e")
 	@OneToMany(mappedBy = "staffGD")
 	private Set<GiaoDichKhachHang> gdkh;
-	
+
 	public Staff(Long id, String name, String email, LocalDate dob, String phoneNumber, String password, String role,
 			int gender, String note, Set<Customer> customers) {
 		super();
@@ -58,7 +58,7 @@ public class Staff {
 	}
 
 	public Staff() {
-		
+
 	}
 
 	public Long getId() {
@@ -199,6 +199,5 @@ public class Staff {
 	public void setGdkh(Set<GiaoDichKhachHang> gdkh) {
 		this.gdkh = gdkh;
 	}
-	
-	
+
 }
