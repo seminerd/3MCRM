@@ -31,8 +31,6 @@ public class Customer {
 	@Column(name = "dien_thoai")
 	@Size(max = 12)
 	private String phoneNumber;
-	@Column(name = "idnhom_kh")
-	private Integer group;
 	@Column(name = "gioi_tinh")
 	private Integer gender;
 	@Column(name = "ngay_sinh")
@@ -62,27 +60,15 @@ public class Customer {
 	@JsonBackReference("b")
 	@OneToMany(mappedBy = "customerGD")
 	private Set<GiaoDichKhachHang> gdkh;
-
+	@ManyToOne
+	@JoinColumn(name = "idnhom_kh")
+	private NhomKhachhang nhomkhachhang;
+	
 	public Customer() {
 		super();
 	}
 
-	public Customer(String name, String email, @Size(max = 12) String phoneNumber,Integer group, Integer gender,
-			LocalDate dob, Double debt, String address, Staff staff, String note, Integer priority) {
-		super();
 
-		this.name = name;
-		this.email = email;
-		this.phoneNumber = phoneNumber;
-		this.group = group;
-		this.gender = gender;
-		this.dob = dob;
-		this.debt = debt;
-		this.address = address;
-		this.staff = staff;
-		this.note = note;
-		this.priority = priority;
-	}
 
 	public Long getId() {
 		return id;
@@ -114,14 +100,6 @@ public class Customer {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
-	}
-
-	public Integer getGroup() {
-		return group;
-	}
-
-	public void setGroup(Integer group) {
-		this.group = group;
 	}
 
 	public Integer getGender() {
@@ -245,6 +223,14 @@ public class Customer {
 
 	public void setGdkh(Set<GiaoDichKhachHang> gdkh) {
 		this.gdkh = gdkh;
+	}
+
+	public NhomKhachhang getNhomkhachhang() {
+		return nhomkhachhang;
+	}
+
+	public void setNhomkhachhang(NhomKhachhang nhomkhachhang) {
+		this.nhomkhachhang = nhomkhachhang;
 	}
 
 }
