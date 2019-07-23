@@ -1,11 +1,11 @@
 package com.sapo.team03.MCRM.DAO;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,14 +15,13 @@ import com.sapo.team03.MCRM.Model.Customer;
 public interface CustomerDAO extends JpaRepository<Customer, Long> {
 	@Transactional
 	@Modifying
-	@Query(value = "INSERT INTO KHACHHANG(TEN,EMAIL,DIEN_THOAI,IDNHOM_KH,GIOI_TINH,NGAY_SINH,CONG_NO,DIA_CHI) "
-			+ "VALUES(:TEN,:EMAIL,:DIEN_THOAI,:ID_NHOMKH,:GIOI_TINH,:NGAY_SINH,:CONG_NO,:DIA_CHI)", nativeQuery = true)
-	void addCustomer(@Param("TEN") String ten, @Param("EMAIL") String email, @Param("DIEN_THOAI") String dien_thoai,
-			@Param("ID_NHOMKH") Integer nhomkh, @Param("GIOI_TINH") Integer gioi_tinh,
-			@Param("NGAY_SINH") LocalDate ngay_sinh, @Param("CONG_NO") Double cong_no,
-			@Param("DIA_CHI") String dia_chi);
-
-	@Query(value = "SELECT * FROM KHACHHANG WHERE ID = :ID", nativeQuery = true)
-	Customer findCustomerById(@Param("ID") long id);
-
+	@Query(value = "insert into khachhang values (?1, ?2, ?3, ?4,?5, ?6, ?7, ?8, ?9, ?9, ?10, ?11)", nativeQuery = true)
+	public void insertCustomer(String ten, String dia_chi, LocalDate ngay_sinh, String email, String dien_thoai, 
+			Integer uu_tien, Integer gioi_tinh, Double cong_no, String ghi_chu, Long idnv_kh, Long idnhom_kh);
+	@Query(value="select * from khachhang where email = ?", nativeQuery = true)
+	public Customer findByEmail(String email);
+	@Query(value = "select * from khachhang where dien_thoai = ?", nativeQuery = true)
+	public Customer findByPhonenumber(String phoneNumber);
+	@Query(value = "select * from khachhang where idnv_kh = ?", nativeQuery = true)
+	public List<Customer> getCustomersByStaffId(Long id);
 }

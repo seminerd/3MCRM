@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Configuration
 @PropertySource("application.properties")
@@ -12,5 +13,7 @@ public class AppConfig {
 	public static PropertySourcesPlaceholderConfigurer getCongig() {
 		return new PropertySourcesPlaceholderConfigurer();
 	}
+
+	
 
 }

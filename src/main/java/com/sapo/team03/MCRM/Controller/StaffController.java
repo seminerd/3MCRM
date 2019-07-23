@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sapo.team03.MCRM.DAO.StaffDAO;
-import com.sapo.team03.MCRM.Exception.PasswordNotMatch;
-import com.sapo.team03.MCRM.Exception.UsernameNotFound;
 import com.sapo.team03.MCRM.Model.Staff;
 import com.sapo.team03.MCRM.Utils.Utilities;
 @CrossOrigin(origins="*")
@@ -66,18 +64,7 @@ public class StaffController {
 		staffDAO.save(sta);
 		return staffDAO.findById(id).get();
 	}
-	@PostMapping("staffs/login")
-	public Staff login(@RequestBody Staff staff) {
-		Staff temp = staffDAO.findByEmail(staff.getEmail());
-		if(temp == null) throw new UsernameNotFound(staff.getEmail());
-		else {
-			if( BCrypt.checkpw(staff.getPassword(), temp.getPassword())) {
-				
-				return temp;
-			}
-			else throw new PasswordNotMatch();
-		}
-	}
+	
 	@DeleteMapping("staffs/{id}")
 	public void deleteStaff(@PathVariable Long id) {
 		staffDAO.deleteById(id);
