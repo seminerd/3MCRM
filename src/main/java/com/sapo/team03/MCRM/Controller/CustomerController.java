@@ -97,8 +97,8 @@ public class CustomerController {
 			customer.setNote(cus.getNote());
 		if (cus.getPhoneNumber() != null)
 			customer.setPhoneNumber(cus.getPhoneNumber());
-		if (cus.getPriority() != null)
-			customer.setPriority(cus.getPriority());
+//		if (cus.getPriority() != null)
+//			customer.setPriority(cus.getPriority());
 		if (cus.getStaff() != null) {
 			if (cus.getStaff().getId() != null) {
 				if (staffDAO.findById(cus.getStaff().getId()).orElse(null) != null)
@@ -137,9 +137,10 @@ public class CustomerController {
 	public List<Customer> getCustomerByStaffId(@PathVariable Long id) {
 		return customerDAO.getCustomersByStaffId(id);
 	}
-	@GetMapping("customers/page")
-	List<Customer> loadCustomerPage(@PageableDefault(page = 0, size = 5) Pageable pageable){
-		Page page =  customerDAO.findAllPage(pageable);
-		return page.getContent();
-	}
+//	@GetMapping("customers/page")
+//	List<Customer> loadCustomerPage(@PageableDefault(page = 0, size = 5) Pageable pageable){
+//		Page page =  customerDAO.findAllPage(pageable);
+//		return page.getContent();
+//	}
+	
 }

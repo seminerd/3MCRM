@@ -63,6 +63,7 @@ public class HanghoaController {
 			}
 			else hanghoa.setCategoryHangHoa(cat);
 		}
+		if(hanghoa.getSoluong_daban()==null) hanghoa.setSoluong_daban(0);
 		return hanghoaDAO.save(hanghoa);
 	}
 	@PutMapping("products/{id}")

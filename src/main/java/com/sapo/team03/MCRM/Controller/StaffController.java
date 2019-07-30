@@ -29,7 +29,6 @@ public class StaffController {
 	@Autowired
 	StaffDAO staffDAO;
 
-	@Secured("hasRole('0')")
 	@GetMapping("staffs/list")
 	public List<Staff> getAllStaff(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size) {
 		if(page != null && size != null) return staffDAO.findAll(PageRequest.of(page, size)).getContent();
@@ -45,7 +44,6 @@ public class StaffController {
 
 	}
 
-	@Secured("hasRole('1')")
 	@GetMapping("staffs/{id}")
 	public Staff findStaffById(@PathVariable("id") Long id) {
 		return staffDAO.findById(id).orElse(null);
