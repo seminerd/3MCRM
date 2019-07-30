@@ -4,6 +4,8 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "categoryhanghoa")
 public class CategoryHangHoa {
@@ -14,9 +16,12 @@ public class CategoryHangHoa {
 	@Column(name = "ten")
 	private String ten;
 	@Column(name = "so_luong")
-	private int soLuong;
+	private int so_luong;
+	
+	@JsonBackReference("z")
 	@OneToMany(mappedBy = "categoryHangHoa")
 	private Set<HangHoa> hangHoa;
+	
 	public Long getId() {
 		return id;
 	}
@@ -29,11 +34,12 @@ public class CategoryHangHoa {
 	public void setTen(String ten) {
 		this.ten = ten;
 	}
-	public int getSoLuong() {
-		return soLuong;
+
+	public int getSo_luong() {
+		return so_luong;
 	}
-	public void setSoLuong(int soLuong) {
-		this.soLuong = soLuong;
+	public void setSo_luong(int so_luong) {
+		this.so_luong = so_luong;
 	}
 	public Set<HangHoa> getHangHoa() {
 		return hangHoa;
@@ -44,35 +50,11 @@ public class CategoryHangHoa {
 	public CategoryHangHoa() {
 		super();
 	}
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((hangHoa == null) ? 0 : hangHoa.hashCode());
-		result = prime * result + ((ten == null) ? 0 : ten.hashCode());
-		return result;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CategoryHangHoa other = (CategoryHangHoa) obj;
-		if (hangHoa == null) {
-			if (other.hangHoa != null)
-				return false;
-		} else if (!hangHoa.equals(other.hangHoa))
-			return false;
-		if (ten == null) {
-			if (other.ten != null)
-				return false;
-		} else if (!ten.equals(other.ten))
-			return false;
-		return true;
-	}
 	
+	public CategoryHangHoa(String ten) {
+		super();
+		this.ten = ten;
+	}
+
 	
 }

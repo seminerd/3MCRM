@@ -1,6 +1,7 @@
 package com.sapo.team03.MCRM.Model;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -16,6 +17,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Entity
 @Table(name = "khachhang")
@@ -31,58 +33,40 @@ public class Customer {
 	@Column(name = "dien_thoai")
 	@Size(max = 12)
 	private String phoneNumber;
-	@Column(name = "idnhom_kh")
-	private Integer group;
 	@Column(name = "gioi_tinh")
 	private Integer gender;
+	@JsonDeserialize(using= CustomerDateAndTimeDeserialize.class)
 	@Column(name = "ngay_sinh")
-	private LocalDate dob;
+	private Date dob;
 	@Column(name = "cong_no")
 	private Double debt;
 	@Column(name = "dia_chi")
 	private String address;
-
-	// foreign key
 	@ManyToOne
 	@JoinColumn(name = "idnv_kh")
 	private Staff staff;
-
 	@Column(name = "ghi_chu")
 	private String note;
 	@Column(name = "uu_tien")
 	private Integer priority;
-
+	@JsonBackReference("y")
 	@OneToOne(mappedBy = "customerMail")
 	private Mail mail;
-
 	@JsonBackReference("a")
 	@OneToMany(mappedBy = "customerDH")
 	private Set<DonHang> donhang;
-
 	@JsonBackReference("b")
 	@OneToMany(mappedBy = "customerGD")
 	private Set<GiaoDichKhachHang> gdkh;
-
+	@ManyToOne
+	@JoinColumn(name = "idnhom_kh")
+	private NhomKhachhang nhomkhachhang;
+	
 	public Customer() {
 		super();
 	}
 
-	public Customer(String name, String email, @Size(max = 12) String phoneNumber,Integer group, Integer gender,
-			LocalDate dob, Double debt, String address, Staff staff, String note, Integer priority) {
-		super();
 
-		this.name = name;
-		this.email = email;
-		this.phoneNumber = phoneNumber;
-		this.group = group;
-		this.gender = gender;
-		this.dob = dob;
-		this.debt = debt;
-		this.address = address;
-		this.staff = staff;
-		this.note = note;
-		this.priority = priority;
-	}
 
 	public Long getId() {
 		return id;
@@ -116,14 +100,6 @@ public class Customer {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public Integer getGroup() {
-		return group;
-	}
-
-	public void setGroup(Integer group) {
-		this.group = group;
-	}
-
 	public Integer getGender() {
 		return gender;
 	}
@@ -132,13 +108,18 @@ public class Customer {
 		this.gender = gender;
 	}
 
-	public LocalDate getDob() {
+	@JsonDeserialize(using= CustomerDateAndTimeDeserialize.class)
+	public Date getDob() {
 		return dob;
 	}
 
-	public void setDob(LocalDate dob) {
+
+
+	public void setDob(Date dob) {
 		this.dob = dob;
 	}
+
+
 
 	public Double getDebt() {
 		return debt;
@@ -245,6 +226,14 @@ public class Customer {
 
 	public void setGdkh(Set<GiaoDichKhachHang> gdkh) {
 		this.gdkh = gdkh;
+	}
+
+	public NhomKhachhang getNhomkhachhang() {
+		return nhomkhachhang;
+	}
+
+	public void setNhomkhachhang(NhomKhachhang nhomkhachhang) {
+		this.nhomkhachhang = nhomkhachhang;
 	}
 
 }

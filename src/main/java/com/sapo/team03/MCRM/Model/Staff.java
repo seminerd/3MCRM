@@ -27,20 +27,24 @@ public class Staff {
 	@Column(name = "chuc_vu")
 	private String role;
 	@Column(name = "gioi_tinh")
-	private int gender;
+	private Integer gender;
 	@Column(name = "mo_ta")
 	private String note;
-	@OneToMany(mappedBy = "staff")
+	@Column(name = "role")
+	private Integer roleUA;
+	@OneToMany(mappedBy = "staff", cascade=CascadeType.ALL)
 	@JsonBackReference("c")
 	private Set<Customer> customers;
-
 	@JsonBackReference("d")
 	@OneToMany(mappedBy = "staffDH")
 	private Set<DonHang> donhang;
-
 	@JsonBackReference("e")
 	@OneToMany(mappedBy = "staffGD")
 	private Set<GiaoDichKhachHang> gdkh;
+	public Staff(String email,String password) {
+		this.email=email;
+		this.password=password;
+	}
 
 	public Staff(Long id, String name, String email, LocalDate dob, String phoneNumber, String password, String role,
 			int gender, String note, Set<Customer> customers) {
@@ -117,11 +121,11 @@ public class Staff {
 		this.role = role;
 	}
 
-	public int getGender() {
+	public Integer getGender() {
 		return gender;
 	}
 
-	public void setGender(int gender) {
+	public void setGender(Integer gender) {
 		this.gender = gender;
 	}
 
@@ -199,5 +203,15 @@ public class Staff {
 	public void setGdkh(Set<GiaoDichKhachHang> gdkh) {
 		this.gdkh = gdkh;
 	}
+
+	public Integer getRoleUA() {
+		return roleUA;
+	}
+
+	public void setRoleUA(Integer roleUA) {
+		this.roleUA = roleUA;
+	}
+	
+	
 
 }

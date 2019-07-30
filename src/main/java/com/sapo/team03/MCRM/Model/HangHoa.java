@@ -1,9 +1,10 @@
-package com.sapo.team03.MCRM.Model;
+	package com.sapo.team03.MCRM.Model;
 
-import java.time.LocalDate;
 import java.util.Set;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "hanghoa")
@@ -13,103 +14,115 @@ public class HangHoa {
 	@Column(name = "id")
 	private Long id;
 	@Column(name = "ten")
-	private String name;
+	private String ten;
 	@Column(name = "xuat_su")
-	private String xuatSu;
+	private String xuat_su;
 	@Column(name = "hang_sx")
-	private String hangSx;
+	private String hang_sx;
 	@Column(name = "so_luong")
-	private int soLuong;
+	private Integer so_luong;
 	@Column(name = "gia_nhap")
-	private Double giaNhap;
-	@Column(name = "gia_xuat")
-	private Double giaXuat;
+	private Double gia_nhap;
+	@Column(name = "gia_xuatbuon")
+	private Double gia_xuatbuon;
 	@Column(name = "thue")
-	private int thue;
-	@Column(name = "bao_hanh")
-	private String baoHanh;
-	@Column(name = "han_sd")
-	private LocalDate hanSD;
+	private Integer thue;
 	@Column(name = "mo_ta")
-	private String mota;
+	private String mo_ta;
 	@Column(name = "hinh_anh")
-	private String hinhAnh;
+	private String hinh_anh;
+	
 	@ManyToOne
 	@JoinColumn(name = "id_categoryhh")
 	private CategoryHangHoa categoryHangHoa;
+	
+	@Column(name = "soluong_daban")
+	private Integer soluong_daban;
+	@Column(name = "gia_xuatle")
+	private Double gia_xuatle;
+	@Column(name = "don_vi")
+	private String don_vi;
+	@JsonBackReference("w")
 	@OneToMany(mappedBy = "ctHangHoa")
 	private Set<CTDonHang> ctDonHang;
+	@Column(name="ten_cat")
+	private String catName;
+	
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getName() {
-		return name;
+
+	public String getTen() {
+		return ten;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setTen(String ten) {
+		this.ten = ten;
 	}
-	public String getXuatSu() {
-		return xuatSu;
+	public String getXuat_su() {
+		return xuat_su;
 	}
-	public void setXuatSu(String xuatSu) {
-		this.xuatSu = xuatSu;
+	public void setXuat_su(String xuat_su) {
+		this.xuat_su = xuat_su;
 	}
-	public String getHangSx() {
-		return hangSx;
+	public String getHang_sx() {
+		return hang_sx;
 	}
-	public void setHangSx(String hangSx) {
-		this.hangSx = hangSx;
+	public void setHang_sx(String hang_sx) {
+		this.hang_sx = hang_sx;
 	}
-	public int getSoLuong() {
-		return soLuong;
+
+	public Integer getSo_luong() {
+		return so_luong;
 	}
-	public void setSoLuong(int soLuong) {
-		this.soLuong = soLuong;
+	public void setSo_luong(Integer so_luong) {
+		this.so_luong = so_luong;
 	}
-	public Double getGiaNhap() {
-		return giaNhap;
+	public Double getGia_nhap() {
+		return gia_nhap;
 	}
-	public void setGiaNhap(Double giaNhap) {
-		this.giaNhap = giaNhap;
+	public void setGia_nhap(Double gia_nhap) {
+		this.gia_nhap = gia_nhap;
 	}
-	public Double getGiaXuat() {
-		return giaXuat;
+	public Double getGia_xuatbuon() {
+		return gia_xuatbuon;
 	}
-	public void setGiaXuat(Double giaXuat) {
-		this.giaXuat = giaXuat;
+	public void setGia_xuatbuon(Double gia_xuatbuon) {
+		this.gia_xuatbuon = gia_xuatbuon;
 	}
-	public int getThue() {
+
+	public Integer getThue() {
 		return thue;
 	}
-	public void setThue(int thue) {
+	public void setThue(Integer thue) {
 		this.thue = thue;
 	}
-	public String getBaoHanh() {
-		return baoHanh;
+	public String getMo_ta() {
+		return mo_ta;
 	}
-	public void setBaoHanh(String baoHanh) {
-		this.baoHanh = baoHanh;
+	public void setMo_ta(String mo_ta) {
+		this.mo_ta = mo_ta;
 	}
-	public LocalDate getHanSD() {
-		return hanSD;
+	public String getHinh_anh() {
+		return hinh_anh;
 	}
-	public void setHanSD(LocalDate hanSD) {
-		this.hanSD = hanSD;
+	public void setHinh_anh(String hinh_anh) {
+		this.hinh_anh = hinh_anh;
 	}
-	public String getMota() {
-		return mota;
+	public Integer getSoluong_daban() {
+		return soluong_daban;
 	}
-	public void setMota(String mota) {
-		this.mota = mota;
+	public void setSoluong_daban(Integer soluong_daban) {
+		this.soluong_daban = soluong_daban;
 	}
-	public String getHinhAnh() {
-		return hinhAnh;
+
+	public Double getGia_xuatle() {
+		return gia_xuatle;
 	}
-	public void setHinhAnh(String hinhAnh) {
-		this.hinhAnh = hinhAnh;
+	public void setGia_xuatle(Double gia_xuatle) {
+		this.gia_xuatle = gia_xuatle;
 	}
 	public CategoryHangHoa getCategoryHangHoa() {
 		return categoryHangHoa;
@@ -124,6 +137,19 @@ public class HangHoa {
 		this.ctDonHang = ctDonHang;
 	}
 	
+	public String getDon_vi() {
+		return don_vi;
+	}
+	public void setDon_vi(String don_vi) {
+		this.don_vi = don_vi;
+	}
+	
+	public String getCatName() {
+		return catName;
+	}
+	public void setCatName(String catName) {
+		this.catName = catName;
+	}
 	public HangHoa() {
 		
 	}
@@ -131,18 +157,14 @@ public class HangHoa {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((baoHanh == null) ? 0 : baoHanh.hashCode());
-		result = prime * result + ((categoryHangHoa == null) ? 0 : categoryHangHoa.hashCode());
-		result = prime * result + ((giaNhap == null) ? 0 : giaNhap.hashCode());
-		result = prime * result + ((giaXuat == null) ? 0 : giaXuat.hashCode());
-		result = prime * result + ((hanSD == null) ? 0 : hanSD.hashCode());
-		result = prime * result + ((hangSx == null) ? 0 : hangSx.hashCode());
-		result = prime * result + ((hinhAnh == null) ? 0 : hinhAnh.hashCode());
-		result = prime * result + ((mota == null) ? 0 : mota.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + soLuong;
-		result = prime * result + thue;
-		result = prime * result + ((xuatSu == null) ? 0 : xuatSu.hashCode());
+		result = prime * result + ((gia_nhap == null) ? 0 : gia_nhap.hashCode());
+		result = prime * result + ((gia_xuatbuon == null) ? 0 : gia_xuatbuon.hashCode());
+		result = prime * result + ((gia_xuatle == null) ? 0 : gia_xuatle.hashCode());
+		result = prime * result + ((hang_sx == null) ? 0 : hang_sx.hashCode());
+		result = prime * result + ((hinh_anh == null) ? 0 : hinh_anh.hashCode());
+		result = prime * result + ((ten == null) ? 0 : ten.hashCode());
+		result = prime * result + ((thue == null) ? 0 : thue.hashCode());
+		result = prime * result + ((xuat_su == null) ? 0 : xuat_su.hashCode());
 		return result;
 	}
 	@Override
@@ -154,61 +176,48 @@ public class HangHoa {
 		if (getClass() != obj.getClass())
 			return false;
 		HangHoa other = (HangHoa) obj;
-		if (baoHanh == null) {
-			if (other.baoHanh != null)
+		if (gia_nhap == null) {
+			if (other.gia_nhap != null)
 				return false;
-		} else if (!baoHanh.equals(other.baoHanh))
+		} else if (!gia_nhap.equals(other.gia_nhap))
 			return false;
-		if (categoryHangHoa == null) {
-			if (other.categoryHangHoa != null)
+		if (gia_xuatbuon == null) {
+			if (other.gia_xuatbuon != null)
 				return false;
-		} else if (!categoryHangHoa.equals(other.categoryHangHoa))
+		} else if (!gia_xuatbuon.equals(other.gia_xuatbuon))
 			return false;
-		if (giaNhap == null) {
-			if (other.giaNhap != null)
+		if (gia_xuatle == null) {
+			if (other.gia_xuatle != null)
 				return false;
-		} else if (!giaNhap.equals(other.giaNhap))
+		} else if (!gia_xuatle.equals(other.gia_xuatle))
 			return false;
-		if (giaXuat == null) {
-			if (other.giaXuat != null)
+		if (hang_sx == null) {
+			if (other.hang_sx != null)
 				return false;
-		} else if (!giaXuat.equals(other.giaXuat))
+		} else if (!hang_sx.equals(other.hang_sx))
 			return false;
-		if (hanSD == null) {
-			if (other.hanSD != null)
+		if (hinh_anh == null) {
+			if (other.hinh_anh != null)
 				return false;
-		} else if (!hanSD.equals(other.hanSD))
+		} else if (!hinh_anh.equals(other.hinh_anh))
 			return false;
-		if (hangSx == null) {
-			if (other.hangSx != null)
+		if (ten == null) {
+			if (other.ten != null)
 				return false;
-		} else if (!hangSx.equals(other.hangSx))
+		} else if (!ten.equals(other.ten))
 			return false;
-		if (hinhAnh == null) {
-			if (other.hinhAnh != null)
+		if (thue == null) {
+			if (other.thue != null)
 				return false;
-		} else if (!hinhAnh.equals(other.hinhAnh))
+		} else if (!thue.equals(other.thue))
 			return false;
-		if (mota == null) {
-			if (other.mota != null)
+		if (xuat_su == null) {
+			if (other.xuat_su != null)
 				return false;
-		} else if (!mota.equals(other.mota))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (soLuong != other.soLuong)
-			return false;
-		if (thue != other.thue)
-			return false;
-		if (xuatSu == null) {
-			if (other.xuatSu != null)
-				return false;
-		} else if (!xuatSu.equals(other.xuatSu))
+		} else if (!xuat_su.equals(other.xuat_su))
 			return false;
 		return true;
 	}
 	
+		
 }
