@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //		auth.inMemoryAuthentication().withUser("admin").password("{noop}password").roles("ADMIN");
 		auth.jdbcAuthentication().dataSource(dataSource)
 				.usersByUsernameQuery("select email,password,true as enabled from nhanvien where email=?")
-				.authoritiesByUsernameQuery("select email, roleUA from nhanvien where email=?")
+				.authoritiesByUsernameQuery("select email, role from nhanvien where email=?")
 				.passwordEncoder(new BCryptPasswordEncoder());
 
 	}
