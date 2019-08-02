@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -13,7 +14,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
-@PropertySource("application.properties")
+@Import(MailConfig.class)
+@PropertySource({"classpath:application.properties", "classpath:mailServer.properties"})
 public class AppConfig {
 	@Autowired
 	   Environment env;
@@ -38,17 +40,6 @@ public class AppConfig {
 	    return dataSource;
 
 	}
-
-//    @Bean(name = "jdbc_template")
-//    @Primary
-//    public JdbcTemplate jdbcTemplateBizweb() {
-//        return new JdbcTemplate(bizwebDataSource());
-//    }
-//
-//    @Bean
-//    @Primary
-//    public NamedParameterJdbcTemplate namedParameterJdbcTemplate() {
-//        return new NamedParameterJdbcTemplate(bizwebDataSource());
-//    }
+	
 
 }

@@ -3,10 +3,7 @@ package com.sapo.team03.MCRM.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,12 +20,16 @@ import com.sapo.team03.MCRM.DAO.StaffDAO;
 import com.sapo.team03.MCRM.Exception.DuplicateEmail;
 import com.sapo.team03.MCRM.Exception.DuplicatePhoneNumber;
 import com.sapo.team03.MCRM.Exception.StaffNotFound;
+import com.sapo.team03.MCRM.MarketingServices.Email;
+import com.sapo.team03.MCRM.MarketingServices.MailSender;
 import com.sapo.team03.MCRM.Model.Customer;
 import com.sapo.team03.MCRM.Utils.Utilities;
 
 @CrossOrigin(origins = "*")
 @RestController(value = "customers")
 public class CustomerController {
+	@Autowired
+	MailSender mailSender;
 	@Autowired
 	CustomerDAO customerDAO;
 	@Autowired
@@ -44,6 +45,7 @@ public class CustomerController {
 //	}	
 	@PostMapping("customers/add")
 	public Customer addCustomer(@RequestBody Customer customer) {
+		
 		if (customer.getEmail() != null) {
 			Customer cus = customerDAO.findByEmail(customer.getEmail());
 			if (cus != null)
@@ -67,6 +69,13 @@ public class CustomerController {
 				throw new RuntimeException("Group id "+ customer.getNhomkhachhang().getId()+" not found");
 			}
 		}
+		Email a = new Email();
+		a.setToMail(customer.getEmail());
+		a.setSubject("Test email");
+		a.setContent("Test Test Test");
+		mailSender.setEmail(a);
+		mailSender.sendEmail();
+		
 		return customerDAO.save(customer);
 		
 	}
@@ -125,6 +134,7 @@ public class CustomerController {
 	@GetMapping("customers/list")
 	public List<Customer> getCustomList(@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "size", required = false) Integer size) {
+		
 		if (page != null && size == null)
 			return customerDAO.findAll(PageRequest.of(page, 5)).getContent();
 		if (page != null && size != null)

@@ -5,8 +5,6 @@ import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +31,7 @@ public class StaffController {
 	public List<Staff> getAllStaff(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size) {
 		if(page != null && size != null) return staffDAO.findAll(PageRequest.of(page, size)).getContent();
 		if(page != null && size == null) return staffDAO.findAll(PageRequest.of(page, 20)).getContent();
+		
 		return staffDAO.findAll();
 	}
 
