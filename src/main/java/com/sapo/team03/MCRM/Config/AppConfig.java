@@ -13,10 +13,18 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
+import com.sapo.team03.MCRM.BusinessLogic.BusinessFunction.Calculator;
+import com.sapo.team03.MCRM.BusinessLogic.BusinessFunction.RevenueCalculator;
+
 @Configuration
 @Import(MailConfig.class)
 @PropertySource({"classpath:application.properties", "classpath:mailServer.properties"})
 public class AppConfig {
+	@Bean
+	Calculator getCalc() {
+		return new RevenueCalculator();
+	}
+	
 	@Autowired
 	   Environment env;
 	@Bean

@@ -8,69 +8,46 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-@Table(name = "nhanvien")
+@Table(name = "staff")
 public class Staff {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private Long id;
-	@Column(name = "ten")
+	@Column(name = "name")
 	private String name;
 	@Column(name = "email")
 	private String email;
-	@Column(name = "ngay_sinh")
+	@Column(name = "dob")
 	private LocalDate dob;
-	@Column(name = "dien_thoai")
-	private String phoneNumber;
+	@Column(name = "phone")
+	private String phone;
 	@Column(name = "password")
 	private String password;
-	@Column(name = "chuc_vu")
-	private String role;
-	@Column(name = "gioi_tinh")
+	@Column(name = "job_title")
+	private String jobTitle;
+	@Column(name = "gender")
 	private Integer gender;
-	@Column(name = "mo_ta")
-	private String note;
+	@Column(name = "description")
+	private String description;
 	@Column(name = "role")
-	private Integer roleUA;
+	private Integer role;
 	@OneToMany(mappedBy = "staff", cascade=CascadeType.ALL)
 	@JsonBackReference("c")
 	private Set<Customer> customers;
 	@JsonBackReference("d")
-	@OneToMany(mappedBy = "staffDH")
-	private Set<DonHang> donhang;
+	@OneToMany(mappedBy = "staffOrder")
+	private Set<Orders> orders;
 	@JsonBackReference("e")
-	@OneToMany(mappedBy = "staffGD")
-	private Set<GiaoDichKhachHang> gdkh;
-	public Staff(String email,String password) {
-		this.email=email;
-		this.password=password;
-	}
-
-	public Staff(Long id, String name, String email, LocalDate dob, String phoneNumber, String password, String role,
-			int gender, String note, Set<Customer> customers) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.email = email;
-		this.dob = dob;
-		this.phoneNumber = phoneNumber;
-		this.password = password;
-		this.role = role;
-		this.gender = gender;
-		this.note = note;
-		this.customers = customers;
-	}
-
+	@OneToMany(mappedBy = "staffTransaction")
+	private Set<CustomerTransaction> transactions;
+	
 	public Staff() {
-
+		
 	}
 
 	public Long getId() {
 		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -97,28 +74,12 @@ public class Staff {
 		this.dob = dob;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
 	public String getPassword() {
 		return password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
 	}
 
 	public Integer getGender() {
@@ -129,12 +90,20 @@ public class Staff {
 		this.gender = gender;
 	}
 
-	public String getNote() {
-		return note;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setNote(String note) {
-		this.note = note;
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Integer getRole() {
+		return role;
+	}
+
+	public void setRole(Integer role) {
+		this.role = role;
 	}
 
 	public Set<Customer> getCustomers() {
@@ -144,74 +113,49 @@ public class Staff {
 	public void setCustomers(Set<Customer> customers) {
 		this.customers = customers;
 	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((dob == null) ? 0 : dob.hashCode());
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
-		return result;
+	
+	
+	public String getPhone() {
+		return phone;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Staff other = (Staff) obj;
-		if (dob == null) {
-			if (other.dob != null)
-				return false;
-		} else if (!dob.equals(other.dob))
-			return false;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (phoneNumber == null) {
-			if (other.phoneNumber != null)
-				return false;
-		} else if (!phoneNumber.equals(other.phoneNumber))
-			return false;
-		return true;
+	public void setPhone(String phoneNumber) {
+		this.phone = phoneNumber;
 	}
 
-	public Set<DonHang> getDonhang() {
-		return donhang;
+	public String getJobTitle() {
+		return jobTitle;
 	}
 
-	public void setDonhang(Set<DonHang> donhang) {
-		this.donhang = donhang;
+	public void setJobTitle(String jobTitle) {
+		this.jobTitle = jobTitle;
 	}
 
-	public Set<GiaoDichKhachHang> getGdkh() {
-		return gdkh;
+	public Staff(String email, String password) {
+		super();
+		this.email = email;
+		this.password = password;
 	}
 
-	public void setGdkh(Set<GiaoDichKhachHang> gdkh) {
-		this.gdkh = gdkh;
+	public Set<Orders> getOrders() {
+		return orders;
 	}
 
-	public Integer getRoleUA() {
-		return roleUA;
+	public void setOrders(Set<Orders> orders) {
+		this.orders = orders;
 	}
 
-	public void setRoleUA(Integer roleUA) {
-		this.roleUA = roleUA;
+	public Set<CustomerTransaction> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions(Set<CustomerTransaction> transactions) {
+		this.transactions = transactions;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	
-
 }

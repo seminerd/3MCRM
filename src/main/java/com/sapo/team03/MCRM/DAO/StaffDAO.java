@@ -1,7 +1,8 @@
 package com.sapo.team03.MCRM.DAO;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +12,8 @@ import com.sapo.team03.MCRM.Model.Staff;
 @Repository
 public interface StaffDAO extends JpaRepository<Staff, Long> {
 	@Transactional
-	@Query(value = "select * from nhanvien where email = ?", nativeQuery = true)
+	@Query(value = "select * from staff where email = ?", nativeQuery = true)
 	public Staff findByEmail(String email);
+	@Query(value = " select id from staff", nativeQuery = true)
+	List<Long> getStaffId();
 }

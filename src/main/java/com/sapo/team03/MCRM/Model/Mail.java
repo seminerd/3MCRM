@@ -12,75 +12,77 @@ public class Mail {
 	@Column(name = "id")
 	private Long id;
 	
-	@Column(name = "su_kien")
-	private String suKien;
-	@Column(name = "noi_dung")
-	private String noiDung;
-	@Column(name = "trang_thai")
-	private int trangThai;
-	@Column(name = "chi_phi")
-	private Double chiPhi;
-	@Column(name = "thoigian_gui")
-	private LocalDate thoigianGui;
+	@Column(name = "event")
+	private String event;
+	@Column(name = "content")
+	private String content;
+	@Column(name = "state")
+	private int state;
+	@Column(name = "cost")
+	private Double cost;
+	@Column(name = "time_sent")
+	private LocalDate timeSent;
 	
-	@OneToOne
-	@JoinColumn(name = "idkh_mail")
+	@ManyToOne
+	@JoinColumn(name = "id_customer_mail")
 	private Customer customerMail;
 	
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getSuKien() {
-		return suKien;
+
+	public String getEvent() {
+		return event;
 	}
-	public void setSuKien(String suKien) {
-		this.suKien = suKien;
+
+	public void setEvent(String event) {
+		this.event = event;
 	}
-	public String getNoiDung() {
-		return noiDung;
+
+	public String getContent() {
+		return content;
 	}
-	public void setNoiDung(String noiDung) {
-		this.noiDung = noiDung;
+
+	public void setContent(String content) {
+		this.content = content;
 	}
-	public int getTrangThai() {
-		return trangThai;
+
+	public int getState() {
+		return state;
 	}
-	public void setTrangThai(int trangThai) {
-		this.trangThai = trangThai;
+
+	public void setState(int state) {
+		this.state = state;
 	}
-	public Double getChiPhi() {
-		return chiPhi;
+
+	public Double getCost() {
+		return cost;
 	}
-	public void setChiPhi(Double chiPhi) {
-		this.chiPhi = chiPhi;
+
+	public void setCost(Double cost) {
+		this.cost = cost;
 	}
-	public LocalDate getThoigianGui() {
-		return thoigianGui;
+
+	public LocalDate getTimeSent() {
+		return timeSent;
 	}
-	public void setThoigianGui(LocalDate thoigianGui) {
-		this.thoigianGui = thoigianGui;
+
+	public void setTimeSent(LocalDate timeSent) {
+		this.timeSent = timeSent;
 	}
+
 	public Customer getCustomerMail() {
 		return customerMail;
 	}
-	public void setCustomer(Customer customer) {
-		this.customerMail = customer;
+
+	public void setCustomerMail(Customer customerMail) {
+		this.customerMail = customerMail;
 	}
-	public Mail(Long id, String suKien, String noiDung, int trangThai, Double chiPhi, LocalDate thoigianGui,
-			Customer customer) {
-		super();
-		this.id = id;
-		this.suKien = suKien;
-		this.noiDung = noiDung;
-		this.trangThai = trangThai;
-		this.chiPhi = chiPhi;
-		this.thoigianGui = thoigianGui;
-		this.customerMail = customer;
-	}
-	
+
 	public Mail() {
 		
 	}

@@ -7,54 +7,54 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-@Table(name = "categoryhanghoa")
-public class CategoryHangHoa {
+@Table(name = "category_product")
+public class CategoryProduct {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private Long id;
-	@Column(name = "ten")
-	private String ten;
-	@Column(name = "so_luong")
-	private int so_luong;
-	
+	@Column(name = "name")
+	private String name;
+	@Column(name = "quantity")
+	private Integer quantity;
 	@JsonBackReference("z")
-	@OneToMany(mappedBy = "categoryHangHoa")
-	private Set<HangHoa> hangHoa;
-	
+	@OneToMany(mappedBy = "categoryProduct")
+	private Set<Product> products;
+	public CategoryProduct() {
+		
+	}
+
 	public Long getId() {
 		return id;
 	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public String getTen() {
-		return ten;
-	}
-	public void setTen(String ten) {
-		this.ten = ten;
+
+	public String getName() {
+		return name;
 	}
 
-	public int getSo_luong() {
-		return so_luong;
-	}
-	public void setSo_luong(int so_luong) {
-		this.so_luong = so_luong;
-	}
-	public Set<HangHoa> getHangHoa() {
-		return hangHoa;
-	}
-	public void setHangHoa(Set<HangHoa> hangHoa) {
-		this.hangHoa = hangHoa;
-	}
-	public CategoryHangHoa() {
-		super();
-	}
-	
-	public CategoryHangHoa(String ten) {
-		super();
-		this.ten = ten;
+	public void setName(String name) {
+		this.name = name;
 	}
 
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
+	}
+
+	public CategoryProduct(String name) {
+		super();
+		this.name = name;
+	}
 	
 }

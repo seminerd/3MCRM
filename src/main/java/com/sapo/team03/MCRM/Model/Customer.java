@@ -16,63 +16,53 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Entity
-@Table(name = "khachhang")
+@Table(name = "customer")
 public class Customer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private Long id;
-	@Column(name = "ten")
+	@Column(name = "name")
 	private String name;
 	@Column(name = "email")
 	private String email;
-	@Column(name = "dien_thoai")
+	@Column(name = "phone")
 	@Size(max = 12)
-	private String phoneNumber;
-	@Column(name = "gioi_tinh")
+	private String phone;
+	@Column(name = "gender")
 	private Integer gender;
-	@JsonDeserialize(using= CustomerDateAndTimeDeserialize.class)
-	@Column(name = "ngay_sinh")
+	@Column(name = "dob")
 	private Date dob;
-	@Column(name = "cong_no")
+	@Column(name = "debt")
 	private Double debt;
-	@Column(name = "dia_chi")
+	@Column(name = "address")
 	private String address;
 	@ManyToOne
-	@JoinColumn(name = "idnv_kh")
+	@JoinColumn(name = "staff_id")
 	private Staff staff;
-	@Column(name = "ghi_chu")
+	@Column(name = "note")
 	private String note;
-//	@Column(name = "uu_tien")
-//	private Integer priority;
 	@JsonBackReference("y")
 	@OneToMany(mappedBy = "customerMail")
 	private Set<Mail> mail;
 	@JsonBackReference("a")
-	@OneToMany(mappedBy = "customerDH" , fetch = FetchType.EAGER)
-	private Set<DonHang> donhang;
+	@OneToMany(mappedBy = "customerOrder" , fetch = FetchType.EAGER)
+	private Set<Orders> orders;
 	@JsonBackReference("b")
-	@OneToMany(mappedBy = "customerGD")
-	private Set<GiaoDichKhachHang> gdkh;
+	@OneToMany(mappedBy = "customerTransaction")
+	private Set<CustomerTransaction> transactions;
 	@ManyToOne
-	@JoinColumn(name = "idnhom_kh")
-	private NhomKhachhang nhomkhachhang;
+	@JoinColumn(name = "group_id")
+	private CustomerGroup group;
 	
 	public Customer() {
 		super();
 	}
 
-
-
 	public Long getId() {
 		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -91,14 +81,6 @@ public class Customer {
 		this.email = email;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
 	public Integer getGender() {
 		return gender;
 	}
@@ -107,18 +89,13 @@ public class Customer {
 		this.gender = gender;
 	}
 
-	@JsonDeserialize(using= CustomerDateAndTimeDeserialize.class)
 	public Date getDob() {
 		return dob;
 	}
 
-
-
 	public void setDob(Date dob) {
 		this.dob = dob;
 	}
-
-
 
 	public Double getDebt() {
 		return debt;
@@ -152,55 +129,20 @@ public class Customer {
 		this.note = note;
 	}
 
-//	public Integer getPriority() {
-//		return priority;
-//	}
-//
-//	public void setPriority(Integer priority) {
-//		this.priority = priority;
-//	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((dob == null) ? 0 : dob.hashCode());
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
-		return result;
+	public CustomerGroup getGroup() {
+		return group;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Customer other = (Customer) obj;
-		if (dob == null) {
-			if (other.dob != null)
-				return false;
-		} else if (!dob.equals(other.dob))
-			return false;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (phoneNumber == null) {
-			if (other.phoneNumber != null)
-				return false;
-		} else if (!phoneNumber.equals(other.phoneNumber))
-			return false;
-		return true;
+	public void setGroup(CustomerGroup group) {
+		this.group = group;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phoneNumber) {
+		this.phone = phoneNumber;
 	}
 
 	public Set<Mail> getMail() {
@@ -211,28 +153,21 @@ public class Customer {
 		this.mail = mail;
 	}
 
-	public Set<DonHang> getDonhang() {
-		return donhang;
+	public Set<Orders> getOrders() {
+		return orders;
 	}
 
-	public void setDonhang(Set<DonHang> donhang) {
-		this.donhang = donhang;
+	public void setOrders(Set<Orders> orders) {
+		this.orders = orders;
 	}
 
-	public Set<GiaoDichKhachHang> getGdkh() {
-		return gdkh;
+	public Set<CustomerTransaction> getTransactions() {
+		return transactions;
 	}
 
-	public void setGdkh(Set<GiaoDichKhachHang> gdkh) {
-		this.gdkh = gdkh;
+	public void setTransactions(Set<CustomerTransaction> transactions) {
+		this.transactions = transactions;
 	}
 
-	public NhomKhachhang getNhomkhachhang() {
-		return nhomkhachhang;
-	}
-
-	public void setNhomkhachhang(NhomKhachhang nhomkhachhang) {
-		this.nhomkhachhang = nhomkhachhang;
-	}
 
 }

@@ -3,144 +3,134 @@ package com.sapo.team03.MCRM.Model;
 import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-@Table(name = "donhang")
-public class DonHang {
+@Table(name = "orders")
+public class Orders {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private Long id;
-	@Column(name = "ngay_dathang")
-	private Date ngay_dathang;
-	@Column(name = "diachi_giaohang")
-	private String diachi_giaohang;
-	@Column(name = "tong_tien")
-	private Double tong_tien;
+	@Column(name = "date_order")
+	private Date dateOrder;
+	@Column(name = "address_ship")
+	private String addressShip;
+	@Column(name = "total_money")
+	private Double totalMoney;
 	@ManyToOne
-	@JoinColumn(name = "idnv_dh")
-	private Staff staffDH;
+	@JoinColumn(name = "id_staff_order")
+	private Staff staffOrder;
 	@ManyToOne
-	@JoinColumn(name = "idkh_dh")
-	private Customer customerDH;
+	@JoinColumn(name = "id_customer_order")
+	private Customer customerOrder;
 	@JsonBackReference("s")
-	@OneToMany(mappedBy = "ctDonHang",fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+	@OneToMany(mappedBy = "orderOrder",fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
 	@ElementCollection
-	private Set<CTDonHang> ctDonhang;
-	@Column(name = "phuongthuc_thanhtoan")
-	private String phuongthuc_thanhtoan;
-	@Column(name = "trangthai")
-	private Integer trangthai;
-	@Column(name = "ngay_giaohang")
-	private Date ngay_giaohang;
-	
+	private Set<OrderDetail> orderDetails;
+	@Column(name = "method_pay")
+	private String methodPay;
+	@Column(name = "state")
+	private Integer state;
+	@Column(name = "date_ship")
+	private Date dateShip;
+	@Column(name = "method_ship")
+	private String methodShip;
+	@Column(name = "note")
+	private String note;
+	@Column(name = "discount")
+	private Integer discount;
+	@Column(name = "cost_ship")
+	private Double costShip;
+	public Orders() {
+		
+	}
 	public Long getId() {
 		return id;
 	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-
-
-	public Date getNgay_dathang() {
-		return ngay_dathang;
+	public Date getDateOrder() {
+		return dateOrder;
 	}
-
-	public void setNgay_dathang(Date ngay_dathang) {
-		this.ngay_dathang = ngay_dathang;
+	public void setDateOrder(Date date) {
+		this.dateOrder = date;
 	}
-
-	public String getDiachi_giaohang() {
-		return diachi_giaohang;
+	public String getAddressShip() {
+		return addressShip;
 	}
-//
-//	public LocalDate getNgay_dathang() {
-//		return ngay_dathang;
-//	}
-
-//	public void setNgay_dathang(LocalDate ngay_dathang) {
-//		this.ngay_dathang = ngay_dathang;
-//	}
-
-	public void setDiachi_giaohang(String diachi_giaohang) {
-		this.diachi_giaohang = diachi_giaohang;
+	public void setAddressShip(String addressShip) {
+		this.addressShip = addressShip;
 	}
-
-	public Double getTong_tien() {
-		return tong_tien;
+	
+	public Double getTotalMoney() {
+		return totalMoney;
 	}
-
-	public void setTong_tien(Double tong_tien) {
-		this.tong_tien = tong_tien;
+	public void setTotalMoney(Double totalMoney) {
+		this.totalMoney = totalMoney;
 	}
-
-	public Customer getCustomerDH() {
-		return customerDH;
+	public Staff getStaffOrder() {
+		return staffOrder;
 	}
-
-	public void setCustomerDH(Customer customerDH) {
-		this.customerDH = customerDH;
+	public void setStaffOrder(Staff staffOrder) {
+		this.staffOrder = staffOrder;
 	}
-
-	public Staff getStaffDH() {
-		return staffDH;
+	public Customer getCustomerOrder() {
+		return customerOrder;
 	}
-
-	public void setStaffDH(Staff staffDH) {
-		this.staffDH = staffDH;
+	public void setCustomerOrder(Customer customerOrder) {
+		this.customerOrder = customerOrder;
 	}
-
-
-	public Set<CTDonHang> getCtDonhang() {
-		return ctDonhang;
+	public Set<OrderDetail> getOrderDetails() {
+		return orderDetails;
 	}
-
-	public void setCtDonhang(Set<CTDonHang> ctDonhang) {
-		this.ctDonhang = ctDonhang;
+	public void setOrderDetails(Set<OrderDetail> orderDetails) {
+		this.orderDetails = orderDetails;
 	}
-
-	public String getPhuongthuc_thanhtoan() {
-		return phuongthuc_thanhtoan;
+	public String getMethodPay() {
+		return methodPay;
 	}
-
-	public void setPhuongthuc_thanhtoan(String phuongthuc_thanhtoan) {
-		this.phuongthuc_thanhtoan = phuongthuc_thanhtoan;
+	public void setMethodPay(String methodPay) {
+		this.methodPay = methodPay;
 	}
-
-
-	public Integer getTrangthai() {
-		return trangthai;
+	public Integer getState() {
+		return state;
 	}
-
-	public void setTrangthai(Integer trangthai) {
-		this.trangthai = trangthai;
+	public void setState(Integer state) {
+		this.state = state;
 	}
-
-	public Date getNgay_giaohang() {
-		return ngay_giaohang;
+	public Date getDateShip() {
+		return dateShip;
 	}
-
-	public void setNgay_giaohang(Date ngay_giaohang) {
-		this.ngay_giaohang = ngay_giaohang;
+	public void setDateShip(Date dateShip) {
+		this.dateShip = dateShip;
 	}
-
-	public DonHang() {
-		
+	public String getMethodShip() {
+		return methodShip;
 	}
+	public void setMethodShip(String methodShip) {
+		this.methodShip = methodShip;
+	}
+	public String getNote() {
+		return note;
+	}
+	public void setNote(String note) {
+		this.note = note;
+	}
+	public Integer getDiscount() {
+		return discount;
+	}
+	public void setDiscount(Integer discount) {
+		this.discount = discount;
+	}
+	public Double getCostShip() {
+		return costShip;
+	}
+	public void setCostShip(Double costShip) {
+		this.costShip = costShip;
+	}
+	
 }

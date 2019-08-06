@@ -15,27 +15,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sapo.team03.MCRM.DAO.CustomerDAO;
-import com.sapo.team03.MCRM.DAO.NhomKhachhangDAO;
+import com.sapo.team03.MCRM.DAO.CustomerGroupDAO;
 import com.sapo.team03.MCRM.DAO.StaffDAO;
 import com.sapo.team03.MCRM.Exception.DuplicateEmail;
 import com.sapo.team03.MCRM.Exception.DuplicatePhoneNumber;
 import com.sapo.team03.MCRM.Exception.StaffNotFound;
-import com.sapo.team03.MCRM.MarketingServices.Email;
-import com.sapo.team03.MCRM.MarketingServices.MailSender;
 import com.sapo.team03.MCRM.Model.Customer;
 import com.sapo.team03.MCRM.Utils.Utilities;
 
 @CrossOrigin(origins = "*")
-@RestController(value = "customers")
+@RestController
 public class CustomerController {
-	@Autowired
-	MailSender mailSender;
 	@Autowired
 	CustomerDAO customerDAO;
 	@Autowired
 	StaffDAO staffDAO;
 	@Autowired
-	NhomKhachhangDAO nhomKhachhangDAO;
+	CustomerGroupDAO customerGroupDAO;
 	@Autowired
 	Utilities util;
 
@@ -51,10 +47,10 @@ public class CustomerController {
 			if (cus != null)
 				throw new DuplicateEmail(customer.getEmail());
 		}
-		if (customer.getPhoneNumber() != null) {
-			Customer cus = customerDAO.findByPhonenumber(customer.getPhoneNumber());
+		if (customer.getPhone() != null) {
+			Customer cus = customerDAO.findByPhonenumber(customer.getPhone());
 			if (cus != null)
-				throw new DuplicatePhoneNumber(customer.getPhoneNumber());
+				throw new DuplicatePhoneNumber(customer.getPhone());
 		}
 		if (customer.getStaff() != null) {
 			if (customer.getStaff().getId() == null)
@@ -63,19 +59,13 @@ public class CustomerController {
 				throw new StaffNotFound("Staff Id: " + customer.getStaff().getId());
 			}
 		}
-		if(customer.getNhomkhachhang()!= null) {
-			if(customer.getNhomkhachhang().getId()==null) customer.setNhomkhachhang(null);
-			else if (nhomKhachhangDAO.findById(customer.getNhomkhachhang().getId()).orElse(null)==null) {
-				throw new RuntimeException("Group id "+ customer.getNhomkhachhang().getId()+" not found");
+		if (customer.getGroup() != null) {
+			if (customer.getGroup().getId() == null)
+				customer.setGroup(null);
+			else if (customerGroupDAO.findById(customer.getGroup().getId()).orElse(null) == null) {
+				throw new RuntimeException("Group id " + customer.getGroup().getId() + " not found");
 			}
 		}
-		Email a = new Email();
-		a.setToMail(customer.getEmail());
-		a.setSubject("Test email");
-		a.setContent("Test Test Test");
-		mailSender.setEmail(a);
-		mailSender.sendEmail();
-		
 		return customerDAO.save(customer);
 		
 	}
@@ -104,23 +94,21 @@ public class CustomerController {
 			customer.setName(cus.getName());
 		if (cus.getNote() != null)
 			customer.setNote(cus.getNote());
-		if (cus.getPhoneNumber() != null)
-			customer.setPhoneNumber(cus.getPhoneNumber());
-//		if (cus.getPriority() != null)
-//			customer.setPriority(cus.getPriority());
+		if (cus.getPhone() != null)
+			customer.setPhone(cus.getPhone());
 		if (cus.getStaff() != null) {
 			if (cus.getStaff().getId() != null) {
 				if (staffDAO.findById(cus.getStaff().getId()).orElse(null) != null)
 					customer.setStaff(cus.getStaff());
-					// customer.getStaff().setId(cus.getStaff().getId());
 				else
 					throw new StaffNotFound("Staff id : " + cus.getStaff().getId());
 			}
 		}
-		if (cus.getNhomkhachhang() != null) //customer.setNhomkhachhang(cus.getNhomkhachhang());
-		{
-			if(cus.getNhomkhachhang().getId() == null) customer.setNhomkhachhang(null);
-			else customer.setNhomkhachhang(cus.getNhomkhachhang());
+		if (cus.getGroup() != null) {
+			if (cus.getGroup().getId() == null)
+				customer.setGroup(null);
+			else
+				customer.setGroup(cus.getGroup());
 		}
 		customerDAO.save(customer);
 		return customerDAO.findById(id).get();
@@ -134,7 +122,6 @@ public class CustomerController {
 	@GetMapping("customers/list")
 	public List<Customer> getCustomList(@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "size", required = false) Integer size) {
-		
 		if (page != null && size == null)
 			return customerDAO.findAll(PageRequest.of(page, 5)).getContent();
 		if (page != null && size != null)
@@ -147,10 +134,5 @@ public class CustomerController {
 	public List<Customer> getCustomerByStaffId(@PathVariable Long id) {
 		return customerDAO.getCustomersByStaffId(id);
 	}
-//	@GetMapping("customers/page")
-//	List<Customer> loadCustomerPage(@PageableDefault(page = 0, size = 5) Pageable pageable){
-//		Page page =  customerDAO.findAllPage(pageable);
-//		return page.getContent();
-//	}
-	
+
 }

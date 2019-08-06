@@ -31,7 +31,6 @@ public class StaffController {
 	public List<Staff> getAllStaff(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size) {
 		if(page != null && size != null) return staffDAO.findAll(PageRequest.of(page, size)).getContent();
 		if(page != null && size == null) return staffDAO.findAll(PageRequest.of(page, 20)).getContent();
-		
 		return staffDAO.findAll();
 	}
 
@@ -53,31 +52,20 @@ public class StaffController {
 		if(sta == null) return null;
 		if(staff.getCustomers()!= null) sta.setCustomers(staff.getCustomers());
 		if(staff.getDob()!= null) sta.setDob(staff.getDob());
-		if(staff.getDonhang()!= null) sta.setDonhang(staff.getDonhang());
+		if(staff.getOrders()!= null) sta.setOrders(staff.getOrders());
 		if(staff.getEmail()!= null) sta.setEmail(staff.getEmail());
-		if(staff.getGdkh()!= null) sta.setGdkh(staff.getGdkh());
+		if(staff.getTransactions()!= null) sta.setTransactions(staff.getTransactions());
 		if(staff.getGender()!= null) sta.setGender(staff.getGender());
 		if(staff.getName()!= null) sta.setName(staff.getName());
-		if(staff.getNote()!= null) sta.setNote(staff.getNote());
+		if(staff.getDescription()!= null) sta.setDescription(staff.getDescription());
 		if(staff.getPassword()!= null) sta.setPassword(BCrypt.hashpw(staff.getPassword(), BCrypt.gensalt()));
-		if(staff.getPhoneNumber()!= null) sta.setPhoneNumber(staff.getPhoneNumber());
+		if(staff.getPhone()!= null) sta.setPhone(staff.getPhone());
 		if(staff.getRole()!= null) sta.setRole(staff.getRole());
-		if(staff.getRoleUA()!= null) sta.setRoleUA(staff.getRoleUA());
+		if(staff.getJobTitle()!= null) sta.setJobTitle(staff.getJobTitle());
 		staffDAO.save(sta);
 		return staffDAO.findById(id).get();
 	}
-//	@PostMapping("staffs/login")
-//	public Staff login(@RequestBody Staff staff) {
-//		Staff temp = staffDAO.findByEmail(staff.getEmail());
-//		if(temp == null) throw new UsernameNotFound(staff.getEmail());
-//		else {
-//			if( BCrypt.checkpw(staff.getPassword(), temp.getPassword())) {
-//				
-//				return temp;
-//			}
-//			else throw new PasswordNotMatch();
-//		}
-//	}
+
 	@DeleteMapping("staffs/{id}")
 	public void deleteStaff(@PathVariable Long id) {
 		staffDAO.deleteById(id);
