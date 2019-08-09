@@ -1,10 +1,12 @@
 package com.sapo.team03.MCRM.Controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,15 +33,16 @@ public class StaffController {
 	public List<Staff> getAllStaff(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size) {
 		if(page != null && size != null) return staffDAO.findAll(PageRequest.of(page, size)).getContent();
 		if(page != null && size == null) return staffDAO.findAll(PageRequest.of(page, 20)).getContent();
-		return staffDAO.findAll();
+		return staffDAO.findAll(Sort.by(Sort.Direction.DESC, "updateDate"));
 	}
 
 	@PostMapping("staffs/add")
 	public Staff addStaff(@RequestBody Staff staff) {
 		String encoded = BCrypt.hashpw(staff.getPassword(), BCrypt.gensalt());
 		staff.setPassword(encoded);
+		staff.setUpdateDate(new Date());
 		return staffDAO.save(staff);
-
+		
 	}
 
 	@GetMapping("staffs/{id}")
@@ -62,6 +65,7 @@ public class StaffController {
 		if(staff.getPhone()!= null) sta.setPhone(staff.getPhone());
 		if(staff.getRole()!= null) sta.setRole(staff.getRole());
 		if(staff.getJobTitle()!= null) sta.setJobTitle(staff.getJobTitle());
+		sta.setUpdateDate(new Date());
 		staffDAO.save(sta);
 		return staffDAO.findById(id).get();
 	}

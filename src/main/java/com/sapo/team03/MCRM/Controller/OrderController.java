@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +33,7 @@ public class OrderController {
 	
 	@GetMapping("orders/list")
 	public List<Orders> getOrderList(){
-		return orderDAO.findAll();
+		return orderDAO.findAll(Sort.by(Sort.Direction.DESC, "updateDate"));
 	}
 	@GetMapping("orderdetails/{id}")
 	public List<OrderDetail> getOrderDetails(@PathVariable Long id){
@@ -45,6 +46,7 @@ public class OrderController {
 		if(details.isEmpty()) throw new RuntimeException("Chi tiet don hang trong");
 		if(orders.getTotalMoney()== null) orders.setTotalMoney(0.0);
 		orders.setDateOrder(new Date());
+		orders.setUpdateDate(new Date());
 		orders.setOrderDetails(null);
 		Orders returned = orderDAO.save(orders);
 		Long id = returned.getId();
@@ -75,6 +77,7 @@ public class OrderController {
 	public Orders editStatus(@RequestBody Orders orders, @PathVariable Long id) {
 		Orders temp = orderDAO.findById(id).get();
 		temp.setState(orders.getState());
+		temp.setUpdateDate(new Date());
 		return orderDAO.save(temp);
 	}
 }

@@ -1,5 +1,6 @@
 package com.sapo.team03.MCRM.Model;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -26,7 +27,8 @@ public class CustomerGroup {
 	@JsonBackReference("n")
 	@OneToMany(mappedBy = "group")
 	private Set<Customer> customers;
-	
+	@Column(name = "update_date")
+	private Date updateDate;
 	public CustomerGroup() {
 		
 	}
@@ -85,6 +87,14 @@ public class CustomerGroup {
 
 	public void setDefaultTax(Double defaultTax) {
 		this.defaultTax = defaultTax;
+	}
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
 	}
 	
 }

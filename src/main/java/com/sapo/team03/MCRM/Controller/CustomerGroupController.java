@@ -1,8 +1,10 @@
 package com.sapo.team03.MCRM.Controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +23,7 @@ public class CustomerGroupController {
 	
 	@GetMapping("customer-group/list")
 	public List<CustomerGroup> getCustomerGroupList(){
-		return customerGroupDAO.findAll();
+		return customerGroupDAO.findAll(Sort.by(Sort.Direction.DESC, "updateDate"));
 	}
 	
 	@GetMapping("customer-group/{id}")
@@ -37,6 +39,7 @@ public class CustomerGroupController {
 		if(customerGroup.getDiscount()!= null) cg.setDiscount(customerGroup.getDiscount());
 		if(customerGroup.getDefaultTax()!= null) cg.setDefaultTax(customerGroup.getDefaultTax());
 		if(customerGroup.getNote() != null) cg.setNote(customerGroup.getNote());
+		cg.setUpdateDate(new Date());
 		return customerGroupDAO.saveAndFlush(cg);
 	}
 }

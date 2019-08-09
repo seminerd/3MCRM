@@ -1,11 +1,11 @@
 package com.sapo.team03.MCRM.Model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -48,15 +48,16 @@ public class Customer {
 	@OneToMany(mappedBy = "customerMail")
 	private Set<Mail> mail;
 	@JsonBackReference("a")
-	@OneToMany(mappedBy = "customerOrder" , fetch = FetchType.EAGER)
-	private Set<Orders> orders;
+	@OneToMany(mappedBy = "customerOrder")
+	private List<Orders> orders;
 	@JsonBackReference("b")
 	@OneToMany(mappedBy = "customerTransaction")
 	private Set<CustomerTransaction> transactions;
 	@ManyToOne
 	@JoinColumn(name = "group_id")
 	private CustomerGroup group;
-	
+	@Column(name = "update_date")
+	private Date updateDate;
 	public Customer() {
 		super();
 	}
@@ -153,11 +154,11 @@ public class Customer {
 		this.mail = mail;
 	}
 
-	public Set<Orders> getOrders() {
+	public List<Orders> getOrders() {
 		return orders;
 	}
 
-	public void setOrders(Set<Orders> orders) {
+	public void setOrders(List<Orders> orders) {
 		this.orders = orders;
 	}
 
@@ -169,5 +170,13 @@ public class Customer {
 		this.transactions = transactions;
 	}
 
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+	
 
 }

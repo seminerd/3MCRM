@@ -1,6 +1,7 @@
 package com.sapo.team03.MCRM.BusinessLogic.BusinessFunction;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,8 +12,11 @@ import javax.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sapo.team03.MCRM.BusinessLogic.BusinessModel.DaySale;
+import com.sapo.team03.MCRM.BusinessLogic.BusinessModel.MonthSale;
 import com.sapo.team03.MCRM.BusinessLogic.BusinessModel.ProductSale;
 import com.sapo.team03.MCRM.BusinessLogic.BusinessModel.StaffSale;
+import com.sapo.team03.MCRM.BusinessLogic.BusinessModel.Statistics;
+import com.sapo.team03.MCRM.DAO.CustomerDAO;
 import com.sapo.team03.MCRM.DAO.OrderDAO;
 import com.sapo.team03.MCRM.DAO.StaffDAO;
 
@@ -21,6 +25,8 @@ public class RevenueCalculator implements Calculator {
 	OrderDAO orderDAO;
 	@Autowired
 	StaffDAO staffDAO;
+	@Autowired
+	CustomerDAO customerDAO;
 	@PersistenceContext
 	EntityManager entityManager;
 
@@ -33,8 +39,10 @@ public class RevenueCalculator implements Calculator {
 			today = today.minusDays(1);
 			e.setDate(today);
 			e.setValues(orderDAO.getSaleByDay(today));
+			if(e.getValues()==null) e.setValues(0.0);
 			daySale.add(e);
 		}
+		Collections.reverse(daySale);
 		return daySale;
 	}
 
@@ -47,23 +55,28 @@ public class RevenueCalculator implements Calculator {
 			today = today.minusDays(1);
 			e.setDate(today);
 			e.setValues(orderDAO.getSaleByDay(today));
+			if(e.getValues()==null) e.setValues(0.0);
 			daySale.add(e);
 		}
+		Collections.reverse(daySale);
 		return daySale;
 	}
 
 	@Override
-	public List<DaySale> getYearSale() {
-		LocalDate today = LocalDate.now();
-		List<DaySale> daySale = new ArrayList<DaySale>();
-		for (int i = 1; i <= 12; i++) {
-			DaySale e = new DaySale();
-			today = today.minusMonths(1);
-			e.setDate(today);
+	public List<MonthSale> getYearSale() {
+		List<MonthSale> monthSale = new ArrayList<MonthSale>();		
+		for (int i = 0; i < 12; i++) {
+			MonthSale e = new MonthSale();
+//			YearMonth month = YearMonth.now().minusMonths(i);
+			LocalDate today = LocalDate.now().minusMonths(i);
+			YearMonth month = YearMonth.from(today);
+			e.setMonth(month);
 			e.setValues(orderDAO.getSaleByMonth(today));
-			daySale.add(e);
+			if(e.getValues()==null) e.setValues(0.0);
+			monthSale.add(e);
 		}
-		return daySale;
+		Collections.reverse(monthSale);
+		return monthSale;
 	}
 
 	@Override
@@ -73,6 +86,7 @@ public class RevenueCalculator implements Calculator {
 		for (Long id : ID) {
 			StaffSale e = new StaffSale();
 			e.setId(id);
+			e.setName(staffDAO.getStaffNameById(id));
 			e.setValues(orderDAO.getStaffSale(id));
 			if (e.getValues() == null)
 				e.setValues(0.0);
@@ -92,6 +106,7 @@ public class RevenueCalculator implements Calculator {
 		for (Long id : ID) {
 			StaffSale e = new StaffSale();
 			e.setId(id);
+			e.setName(staffDAO.getStaffNameById(id));
 			e.setValues(orderDAO.getStaffMonthlySale(id));
 			if (e.getValues() == null)
 				e.setValues(0.0);
@@ -106,13 +121,14 @@ public class RevenueCalculator implements Calculator {
 
 	@Override
 	public List<ProductSale> getNumberOfProdSoldMonthly() {
-		List<Object[]> temp = entityManager.createQuery("select id, ten from HangHoa", Object[].class).getResultList();
+		List<Object[]> temp = entityManager.createQuery("select id, name from Product", Object[].class).getResultList();
 		List<ProductSale> list = new ArrayList<>();
 		for (Object[] row : temp) {
 			ProductSale e = new ProductSale();
 			e.setId((Long) row[0]);
 			e.setName((String) row[1]);
 			e.setQuantity(orderDAO.getProdNum(e.getId()));
+			if(e.getQuantity()==null) e.setQuantity(0);
 			list.add(e);
 		}
 		Collections.sort(list, (e1, e2) -> {
@@ -126,7 +142,7 @@ public class RevenueCalculator implements Calculator {
 	public List<ProductSale> getTotalProductSold() {
 		List<ProductSale> temp = new ArrayList<>();
 		List<Object[]> list = entityManager
-				.createQuery("select id, ten, soluong_daban from HangHoa order by soluong_daban desc", Object[].class)
+				.createQuery("select id, name, soldQuantity from Product order by soldQuantity desc", Object[].class)
 				.getResultList();
 		for (Object[] objects : list) {
 			ProductSale e = new ProductSale();
@@ -136,6 +152,16 @@ public class RevenueCalculator implements Calculator {
 			temp.add(e);
 		}
 		return temp;
+	}
+
+	@Override
+	public Statistics getStatistics() {
+		Statistics statistics = new Statistics();
+		statistics.setTotalCustomers(customerDAO.getTotalCustomer());
+		statistics.setTotalStaffs(staffDAO.getTotalStaff());
+		statistics.setTotalOrders(orderDAO.getTotalOrders());
+		statistics.setRevenue(orderDAO.getRevenue());
+		return statistics;
 	}
 
 }

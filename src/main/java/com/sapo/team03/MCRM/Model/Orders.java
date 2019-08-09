@@ -44,6 +44,9 @@ public class Orders {
 	private Integer discount;
 	@Column(name = "cost_ship")
 	private Double costShip;
+	@Column(name = "update_date")
+	private Date updateDate;
+	
 	public Orders() {
 		
 	}
@@ -132,5 +135,12 @@ public class Orders {
 	public void setCostShip(Double costShip) {
 		this.costShip = costShip;
 	}
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
 	
 }

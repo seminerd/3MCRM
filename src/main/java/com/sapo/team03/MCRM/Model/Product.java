@@ -1,5 +1,6 @@
 package com.sapo.team03.MCRM.Model;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -45,6 +46,8 @@ public class Product {
 	private Set<OrderDetail> orderDetails;
 	@Column(name="cat_name")
 	private String catName;
+	@Column(name = "update_date")
+	private Date updateDate;
 	
 	public Product() {
 		
@@ -172,6 +175,14 @@ public class Product {
 
 	public void setOrderDetails(Set<OrderDetail> orderDetails) {
 		this.orderDetails = orderDetails;
+	}
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
 	}
 
 	@Override

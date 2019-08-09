@@ -1,6 +1,8 @@
 package com.sapo.team03.MCRM.Model;
 
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -32,15 +34,17 @@ public class Staff {
 	private String description;
 	@Column(name = "role")
 	private Integer role;
-	@OneToMany(mappedBy = "staff", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "staff")
 	@JsonBackReference("c")
-	private Set<Customer> customers;
+	private List<Customer> customers;
 	@JsonBackReference("d")
 	@OneToMany(mappedBy = "staffOrder")
 	private Set<Orders> orders;
 	@JsonBackReference("e")
 	@OneToMany(mappedBy = "staffTransaction")
 	private Set<CustomerTransaction> transactions;
+	@Column(name = "update_date")
+	private Date updateDate;
 	
 	public Staff() {
 		
@@ -106,15 +110,14 @@ public class Staff {
 		this.role = role;
 	}
 
-	public Set<Customer> getCustomers() {
+	public List<Customer> getCustomers() {
 		return customers;
 	}
 
-	public void setCustomers(Set<Customer> customers) {
+	public void setCustomers(List<Customer> customers) {
 		this.customers = customers;
 	}
-	
-	
+
 	public String getPhone() {
 		return phone;
 	}
@@ -156,6 +159,13 @@ public class Staff {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
 	
 }

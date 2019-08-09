@@ -1,9 +1,11 @@
 package com.sapo.team03.MCRM.Controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +39,8 @@ public class ProductController {
 	@GetMapping("products/list")
 	public List<Product> getProductList(){
 		List<Product> prod = new ArrayList<>();
-		for (Product product : productDAO.findAll()) {
+		List<Product> temp = productDAO.findAll(Sort.by(Sort.Direction.DESC, "updateDate"));
+		for (Product product : temp) {
 			if(product.getCategoryProduct()!= null) {
 				product.setCatName(product.getCategoryProduct().getName());
 			}
@@ -72,6 +75,7 @@ public class ProductController {
 			else product.setCategoryProduct(cat);
 		}
 		if(product.getSoldQuantity()==null) product.setSoldQuantity(0);
+		product.setUpdateDate(new Date());
 		return productDAO.save(product);
 	}
 	@PutMapping("products/{id}")
@@ -100,6 +104,7 @@ public class ProductController {
 			product.setCategoryProduct(cat);
 			product.setCatName(temp);
 		}
+		product.setUpdateDate(new Date());
 		productDAO.save(product);
 		return productDAO.findById(id).get();
 	}

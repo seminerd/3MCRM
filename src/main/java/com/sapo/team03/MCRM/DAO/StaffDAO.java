@@ -16,4 +16,8 @@ public interface StaffDAO extends JpaRepository<Staff, Long> {
 	public Staff findByEmail(String email);
 	@Query(value = " select id from staff", nativeQuery = true)
 	List<Long> getStaffId();
+	@Query(value = "select name from staff where id = ?1", nativeQuery = true)
+	String getStaffNameById(Long id);
+	@Query(value = "select count(*) from staff", nativeQuery = true)
+	Integer getTotalStaff();
 }

@@ -22,4 +22,6 @@ public interface CustomerDAO extends JpaRepository<Customer, Long> {
 	public List<Customer> getCustomersByStaffId(Long id);
 	@Query(value="select * from customer", nativeQuery = true)
 	public Page<Customer> findAllPage(Pageable pageable);  
+	@Query(value = "select count(*) from customer", nativeQuery = true)
+	Integer getTotalCustomer();
 }
