@@ -20,6 +20,8 @@ public class CategoryProduct {
 	@JsonBackReference("z")
 	@OneToMany(mappedBy = "categoryProduct")
 	private Set<Product> products;
+	@ManyToMany(mappedBy="interest")
+	private Set<Lead> interestedLead;
 	
 	public CategoryProduct() {
 		

@@ -1,4 +1,4 @@
-package com.sapo.team03.MCRM.BusinessLogic.BusinessModel;
+package com.sapo.team03.MCRM.Service.StatisticModel;
 
 public class ProductSale {
 	private Long id;

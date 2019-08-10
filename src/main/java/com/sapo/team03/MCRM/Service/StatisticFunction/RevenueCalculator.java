@@ -1,4 +1,4 @@
-package com.sapo.team03.MCRM.BusinessLogic.BusinessFunction;
+package com.sapo.team03.MCRM.Service.StatisticFunction;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -11,14 +11,14 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.sapo.team03.MCRM.BusinessLogic.BusinessModel.DaySale;
-import com.sapo.team03.MCRM.BusinessLogic.BusinessModel.MonthSale;
-import com.sapo.team03.MCRM.BusinessLogic.BusinessModel.ProductSale;
-import com.sapo.team03.MCRM.BusinessLogic.BusinessModel.StaffSale;
-import com.sapo.team03.MCRM.BusinessLogic.BusinessModel.Statistics;
 import com.sapo.team03.MCRM.DAO.CustomerDAO;
 import com.sapo.team03.MCRM.DAO.OrderDAO;
 import com.sapo.team03.MCRM.DAO.StaffDAO;
+import com.sapo.team03.MCRM.Service.StatisticModel.DaySale;
+import com.sapo.team03.MCRM.Service.StatisticModel.MonthSale;
+import com.sapo.team03.MCRM.Service.StatisticModel.ProductSale;
+import com.sapo.team03.MCRM.Service.StatisticModel.StaffSale;
+import com.sapo.team03.MCRM.Service.StatisticModel.Statistics;
 
 public class RevenueCalculator implements Calculator {
 	@Autowired

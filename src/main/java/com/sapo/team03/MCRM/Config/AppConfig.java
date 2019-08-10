@@ -13,8 +13,8 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import com.sapo.team03.MCRM.BusinessLogic.BusinessFunction.Calculator;
-import com.sapo.team03.MCRM.BusinessLogic.BusinessFunction.RevenueCalculator;
+import com.sapo.team03.MCRM.Service.StatisticFunction.Calculator;
+import com.sapo.team03.MCRM.Service.StatisticFunction.RevenueCalculator;
 
 @Configuration
 @Import(MailConfig.class)

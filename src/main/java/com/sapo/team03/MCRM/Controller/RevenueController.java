@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sapo.team03.MCRM.BusinessLogic.BusinessFunction.Calculator;
-import com.sapo.team03.MCRM.BusinessLogic.BusinessModel.DaySale;
-import com.sapo.team03.MCRM.BusinessLogic.BusinessModel.MonthSale;
-import com.sapo.team03.MCRM.BusinessLogic.BusinessModel.ProductSale;
-import com.sapo.team03.MCRM.BusinessLogic.BusinessModel.StaffSale;
-import com.sapo.team03.MCRM.BusinessLogic.BusinessModel.Statistics;
+import com.sapo.team03.MCRM.Service.StatisticFunction.Calculator;
+import com.sapo.team03.MCRM.Service.StatisticModel.DaySale;
+import com.sapo.team03.MCRM.Service.StatisticModel.MonthSale;
+import com.sapo.team03.MCRM.Service.StatisticModel.ProductSale;
+import com.sapo.team03.MCRM.Service.StatisticModel.StaffSale;
+import com.sapo.team03.MCRM.Service.StatisticModel.Statistics;
 
 @RestController
 @CrossOrigin(origins="*")

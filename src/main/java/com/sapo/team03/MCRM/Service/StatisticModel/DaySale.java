@@ -1,4 +1,4 @@
-package com.sapo.team03.MCRM.BusinessLogic.BusinessModel;
+package com.sapo.team03.MCRM.Service.StatisticModel;
 
 import java.time.LocalDate;
 
