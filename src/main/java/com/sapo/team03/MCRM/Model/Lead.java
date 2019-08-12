@@ -1,5 +1,6 @@
 package com.sapo.team03.MCRM.Model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -20,19 +21,29 @@ public class Lead {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private long id;
+	public long getId() {
+		return id;
+	}
 	@Column(name = "name")
 	private String name;
 	@Column(name = "email")
 	private String email;
+	public Lead() {
+		super();
+		 interest = new HashSet<CategoryProduct>();
+	
+	}
 	@Column(name = "phone")
 	private String phone;
 	@ManyToMany
 	@JoinTable(name = "lead_category", 
 	joinColumns = @JoinColumn(name = "id_lead"), 
 	inverseJoinColumns = @JoinColumn(name = "id_category"))
-	private Set<CategoryProduct> interest;
-	@Column(name = "state")
-	private String state;
+	private Set<CategoryProduct> interest ;
+	@Column(name = "opportunity")
+	private int opportunity;
+	
+	
 	public String getName() {
 		return name;
 	}
@@ -54,15 +65,16 @@ public class Lead {
 	public Set<CategoryProduct> getInterest() {
 		return interest;
 	}
-	public void setInterest(Set<CategoryProduct> interest) {
-		this.interest = interest;
+	public void setInterest(CategoryProduct interest) {
+		this.interest.add(interest);
 	}
-	public String getState() {
-		return state;
+	public int getOpportunity() {
+		return opportunity;
 	}
-	public void setState(String state) {
-		this.state = state;
+	public void setOpportunity(int opportunity) {
+		this.opportunity = opportunity;
 	}
+	
 
 	
 

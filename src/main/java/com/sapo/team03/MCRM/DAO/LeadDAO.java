@@ -7,5 +7,4 @@ import com.sapo.team03.MCRM.Model.Lead;
 @Repository
 public interface LeadDAO extends JpaRepository<Lead, Long> {
 	
-
 }

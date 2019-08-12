@@ -14,15 +14,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sapo.team03.MCRM.DAO.CategoryProductDAO;
 import com.sapo.team03.MCRM.DAO.LeadDAO;
 import com.sapo.team03.MCRM.Model.Lead;
+import com.sapo.team03.MCRM.Service.LeadService;
 import com.sapo.team03.MCRM.Service.XlsxHandler;
 
 @RestController
 public class LeadController {
 	@Autowired
 	LeadDAO leadDAO;
-	
+	@Autowired
+	CategoryProductDAO categoryDAO;
 
 	@GetMapping("/lead/list")
 	public List<Lead> getListLead(@RequestParam(value = "page", required = false) Integer page,
@@ -34,13 +37,19 @@ public class LeadController {
 		else
 			return leadDAO.findAll();
 	}
-	@RequestMapping(value = "/upload", method = RequestMethod.POST, 
-		      consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+
+	@RequestMapping(value = "/lead/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public String uploadXlsx(@RequestParam("file") MultipartFile file) {
 		XlsxHandler handler = new XlsxHandler(file);
+		LeadService service = new LeadService();
 		try {
-			handler.receiver();
+			handler.receiveFile();
+			service.setHandler(handler);
+			service.setLeadDAO(leadDAO);
+			service.setCategoryDAO(categoryDAO);
+			service.addLeads();
 		} catch (IOException e) {
+
 			e.printStackTrace();
 		}
 		return null;
