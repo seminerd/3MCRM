@@ -1,4 +1,4 @@
-package com.sapo.team03.MCRM.Model;
+package com.sapo.team03.MCRM.Management.Model;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -8,6 +8,9 @@ import java.util.Set;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.sapo.team03.MCRM.Marketing.Model.Customer;
+import com.sapo.team03.MCRM.Sale.Model.CustomerTransaction;
+import com.sapo.team03.MCRM.Sale.Model.Orders;
 
 @Entity
 @Table(name = "staff")

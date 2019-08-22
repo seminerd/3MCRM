@@ -1,4 +1,4 @@
-package com.sapo.team03.MCRM.Model;
+package com.sapo.team03.MCRM.Marketing.Model;
 
 import java.util.Date;
 import java.util.List;
@@ -10,12 +10,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.sapo.team03.MCRM.Management.Model.Staff;
+import com.sapo.team03.MCRM.Sale.Model.CustomerTransaction;
+import com.sapo.team03.MCRM.Sale.Model.Orders;
 
 @Entity
 @Table(name = "customer")
@@ -29,7 +34,7 @@ public class Customer {
 	@Column(name = "email")
 	private String email;
 	@Column(name = "phone")
-	@Size(max = 12)
+	@Size(max = 20)
 	private String phone;
 	@Column(name = "gender")
 	private Integer gender;
@@ -44,20 +49,26 @@ public class Customer {
 	private Staff staff;
 	@Column(name = "note")
 	private String note;
-	@JsonBackReference("y")
-	@OneToMany(mappedBy = "customerMail")
-	private Set<Mail> mail;
+//	@JsonBackReference("y")
+//	@OneToMany(mappedBy = "customerMail")
+//	private Set<Mail> mail;
 	@JsonBackReference("a")
 	@OneToMany(mappedBy = "customerOrder")
 	private List<Orders> orders;
 	@JsonBackReference("b")
 	@OneToMany(mappedBy = "customerTransaction")
 	private Set<CustomerTransaction> transactions;
-	@ManyToOne
-	@JoinColumn(name = "group_id")
-	private CustomerGroup group;
+	
+	@ManyToMany
+	@JoinTable(name = "cus_group", joinColumns = @JoinColumn(name = "id_cus"),
+								   inverseJoinColumns = @JoinColumn(name = "id_group"))
+	private List<CustomerGroup> groups;
+	
 	@Column(name = "update_date")
 	private Date updateDate;
+	@Column(name = "points")
+	private Integer point;
+	
 	public Customer() {
 		super();
 	}
@@ -130,14 +141,6 @@ public class Customer {
 		this.note = note;
 	}
 
-	public CustomerGroup getGroup() {
-		return group;
-	}
-
-	public void setGroup(CustomerGroup group) {
-		this.group = group;
-	}
-
 	public String getPhone() {
 		return phone;
 	}
@@ -146,13 +149,13 @@ public class Customer {
 		this.phone = phoneNumber;
 	}
 
-	public Set<Mail> getMail() {
-		return mail;
-	}
-
-	public void setMail(Set<Mail> mail) {
-		this.mail = mail;
-	}
+//	public Set<Mail> getMail() {
+//		return mail;
+//	}
+//
+//	public void setMail(Set<Mail> mail) {
+//		this.mail = mail;
+//	}
 
 	public List<Orders> getOrders() {
 		return orders;
@@ -177,6 +180,25 @@ public class Customer {
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
-	
+
+	public List<CustomerGroup> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<CustomerGroup> groups) {
+		this.groups = groups;
+	}
+
+	public Integer getPoint() {
+		return point;
+	}
+
+	public void setPoint(Integer point) {
+		this.point = point;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 }

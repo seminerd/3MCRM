@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sapo.team03.MCRM.DAO.CategoryProductDAO;
 import com.sapo.team03.MCRM.DAO.ProductDAO;
-import com.sapo.team03.MCRM.Model.CategoryProduct;
-import com.sapo.team03.MCRM.Model.Product;
+import com.sapo.team03.MCRM.Sale.Model.CategoryProduct;
+import com.sapo.team03.MCRM.Sale.Model.Product;
 
 @CrossOrigin(origins="*")
 @RestController

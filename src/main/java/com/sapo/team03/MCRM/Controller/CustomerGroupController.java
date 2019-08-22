@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sapo.team03.MCRM.DAO.CustomerGroupDAO;
-import com.sapo.team03.MCRM.Model.CustomerGroup;
+import com.sapo.team03.MCRM.Marketing.Model.CustomerGroup;
 
 @RestController
 @CrossOrigin(origins = "*")

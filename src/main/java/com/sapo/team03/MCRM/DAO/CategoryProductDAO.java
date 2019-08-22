@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sapo.team03.MCRM.Model.CategoryProduct;
+import com.sapo.team03.MCRM.Sale.Model.CategoryProduct;
 
 @Repository
 public interface CategoryProductDAO extends JpaRepository<CategoryProduct, Long>{

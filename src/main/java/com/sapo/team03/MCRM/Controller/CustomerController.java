@@ -1,13 +1,21 @@
 package com.sapo.team03.MCRM.Controller;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,15 +26,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sapo.team03.MCRM.DAO.ConversionDAO;
 import com.sapo.team03.MCRM.DAO.CustomerDAO;
 import com.sapo.team03.MCRM.DAO.CustomerGroupDAO;
+import com.sapo.team03.MCRM.DAO.LeadDAO;
+import com.sapo.team03.MCRM.DAO.OrderDAO;
 import com.sapo.team03.MCRM.DAO.StaffDAO;
 import com.sapo.team03.MCRM.Exception.DuplicateEmail;
 import com.sapo.team03.MCRM.Exception.DuplicatePhoneNumber;
 import com.sapo.team03.MCRM.Exception.StaffNotFound;
-import com.sapo.team03.MCRM.Model.Customer;
-import com.sapo.team03.MCRM.Model.Orders;
-import com.sapo.team03.MCRM.Utils.Utilities;
+import com.sapo.team03.MCRM.Marketing.Model.Customer;
+import com.sapo.team03.MCRM.Marketing.Model.CustomerGroup;
+import com.sapo.team03.MCRM.Sale.Model.Orders;
+import com.sapo.team03.MCRM.Service.CustomerService;
+import com.sapo.team03.MCRM.Service.XlsxHandler;
+import com.sapo.team03.MCRM.Service.StatisticModel.Conversion;
 
 @CrossOrigin(origins = "*")
 @RestController(value = "customers")
@@ -38,20 +52,50 @@ public class CustomerController {
 	@Autowired
 	CustomerGroupDAO customerGroupDAO;
 	@Autowired
-	Utilities util;
+	LeadDAO leadDAO;
+	@Autowired
+	OrderDAO orderDAO;
+	@Autowired
+	ConversionDAO conversionDAO;
+	
 
 	@PostMapping("customers/add")
-	public Customer addCustomer(@RequestBody Customer customer) {
+	public Customer addCustomer(@RequestBody Customer customer,
+			@RequestParam(value = "idLead", required = false) Long idLead) {
 		if (customer.getEmail() != null) {
 			Customer cus = customerDAO.findByEmail(customer.getEmail());
 			if (cus != null)
 				throw new DuplicateEmail(customer.getEmail());
 		}
+
 		if (customer.getPhone() != null) {
 			Customer cus = customerDAO.findByPhonenumber(customer.getPhone());
 			if (cus != null)
 				throw new DuplicatePhoneNumber(cus.getPhone());
 		}
+		if (idLead != null) {
+			Conversion temp = conversionDAO.findRecordByMonth(LocalDate.now());
+			if (leadDAO.findById(idLead).get().getOpportunity() == 0)
+				temp.setLeadToCustomer(temp.getLeadToCustomer() + 1);
+			else
+				temp.setOpportunityToCustomer(temp.getOpportunityToCustomer() + 1);
+			leadDAO.deleteById(idLead);
+		}else {
+		if (leadDAO.findByEmail(customer.getEmail()) != null) {
+			Conversion temp = conversionDAO.findRecordByMonth(LocalDate.now());
+			if (leadDAO.findByEmail(customer.getEmail()).getOpportunity() == 0)
+				temp.setLeadToCustomer(temp.getLeadToCustomer() + 1);
+			else
+				temp.setOpportunityToCustomer(temp.getOpportunityToCustomer() + 1);
+			leadDAO.deleteByEmail(customer.getEmail());
+		} else if (leadDAO.findByPhone(customer.getPhone()) != null) {
+			Conversion temp = conversionDAO.findRecordByMonth(LocalDate.now());
+			if (leadDAO.findByPhone(customer.getPhone()).getOpportunity() == 0)
+				temp.setLeadToCustomer(temp.getLeadToCustomer() + 1);
+			else
+				temp.setOpportunityToCustomer(temp.getOpportunityToCustomer() + 1);
+			leadDAO.deleteByPhone(customer.getPhone());
+		}}
 		if (customer.getStaff() != null) {
 			if (customer.getStaff().getId() == null)
 				customer.setStaff(null);
@@ -59,61 +103,51 @@ public class CustomerController {
 				throw new StaffNotFound("Staff Id: " + customer.getStaff().getId());
 			}
 		}
-		if (customer.getGroup() != null) {
-			if (customer.getGroup().getId() == null)
-				customer.setGroup(null);
-			else if (customerGroupDAO.findById(customer.getGroup().getId()).orElse(null) == null) {
-				throw new RuntimeException("Group id " + customer.getGroup().getId() + " not found");
-			}
-		}
+		customer.setPoint(0);
+		List<CustomerGroup> list ;
+		if(customer.getGroups().isEmpty())
+			list = new ArrayList<CustomerGroup>();
+		else list = customer.getGroups();
+		int age = customerDAO.getAgeByDate(customer.getDob());
+		list.add(customerGroupDAO.getGroupByAge(age));
+		list.add(customerGroupDAO.getGroupByPoint(customer.getPoint()));
+		customer.setGroups(list);
 		customer.setUpdateDate(new Date());
+
 		return customerDAO.save(customer);
 
 	}
 
 	@GetMapping("customers/{id}")
 	public Customer findCustomerById(@PathVariable("id") long id) {
-		return customerDAO.findById(id).get();
+		Customer customer = customerDAO.findById(id).get();
+		return customer;
 	}
 
+	@Transactional
 	@PutMapping("customers/{id}")
-	public Customer editCustomer(@RequestBody Customer cus, @PathVariable Long id) {
-		Customer customer = customerDAO.findById(id).orElse(null);
-		if (customer == null)
-			return null;
-		if (cus.getAddress() != null || cus.getAddress() != "")
-			customer.setAddress(cus.getAddress());
-		if (cus.getDebt() != null)
-			customer.setDebt(cus.getDebt());
-		if (cus.getDob() != null)
-			customer.setDob(cus.getDob());
-		if (cus.getEmail() != null)
-			customer.setEmail(cus.getEmail());
-		if (cus.getGender() != null)
-			customer.setGender(cus.getGender());
-		if (cus.getName() != null)
-			customer.setName(cus.getName());
-		if (cus.getNote() != null)
-			customer.setNote(cus.getNote());
-		if (cus.getPhone() != null)
-			customer.setPhone(cus.getPhone());
-		if (cus.getStaff() != null) {
-			if (cus.getStaff().getId() != null) {
-				if (staffDAO.findById(cus.getStaff().getId()).orElse(null) != null)
-					customer.setStaff(cus.getStaff());
-				else
-					throw new StaffNotFound("Staff id : " + cus.getStaff().getId());
+	public Customer editCustomer(@RequestBody Customer customer, @PathVariable Long id) {
+		customer.setId(id);
+		Customer cus = customerDAO.findById(id).get();
+		List<CustomerGroup> listOld = cus.getGroups();
+		List<CustomerGroup> listNew = customer.getGroups();
+
+		for (CustomerGroup customerGroup : listOld) {
+			if (customerGroup.checkExistingGroup(listNew)) {
+				continue;
 			}
+			if (customerGroup.getIdGroup() == 1 || customerGroup.getIdGroup() == 2) {
+				listNew.add(customerGroup);
+				continue;
+			}
+
 		}
-		if (cus.getGroup() != null) {
-			if (cus.getGroup().getId() == null)
-				customer.setGroup(null);
-			else
-				customer.setGroup(cus.getGroup());
-		}
+		customerGroupDAO.deleteOldCustomer(id);
 		customer.setUpdateDate(new Date());
-		customerDAO.save(customer);
-		return customerDAO.findById(id).get();
+		customer.setGroups(listNew);
+		customer.setPoint(cus.getPoint());
+		return customerDAO.save(customer);
+//		return customerDAO.findById(id).get();
 	}
 
 	@DeleteMapping("customers/{id}")
@@ -124,34 +158,116 @@ public class CustomerController {
 	@GetMapping("customers/list")
 	public List<Customer> getCustomList(@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "size", required = false) Integer size) {
+		List<Customer> customers = new ArrayList<Customer>();
 		if (page != null && size == null)
-			return customerDAO.findAll(PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "updateDate"))).getContent();
+			customers = customerDAO.findAll(PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "updateDate")))
+					.getContent();
 		if (page != null && size != null)
-			return customerDAO.findAll(PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "updateDate"))).getContent();
-		else
-			return customerDAO.findAll(Sort.by(Sort.Direction.DESC, "updateDate"));
+			customers = customerDAO.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateDate")))
+					.getContent();
+		else {
+			customers = customerDAO.findAll();
+		}
+		for (Customer customer : customers) {
+			int age = customerDAO.getAgeById(customer.getId());
+			List<CustomerGroup> existing = customer.getGroups();
+			if (existing.isEmpty()) {
+				customer.getGroups().add(customerGroupDAO.getGroupByAge(age));
+				customer.getGroups().add(customerGroupDAO.getGroupByPoint(customer.getPoint()));
+				customerDAO.save(customer);
+			} else {
+				for (CustomerGroup temp : existing) {
+					if (temp.getIdGroup() == 1) {
+						CustomerGroup tmp = customerGroupDAO.getGroupByAge(age);
+						if (temp == tmp)
+							;
+						else {
+							customerGroupDAO.updateCustomerGroup(tmp.getId(), customer.getId(), temp.getId());
+						}
+					}
+					if (temp.getIdGroup() == 2) {
+						CustomerGroup tmp = customerGroupDAO.getGroupByPoint(customer.getPoint());
+						if (temp == tmp)
+							;
+						else {
+							customerGroupDAO.updateCustomerGroup(tmp.getId(), customer.getId(), temp.getId());
+						}
+					}
+				}
+			}
+		}
+		return customerDAO.findAll(Sort.by(Sort.Direction.DESC, "updateDate"));
 	}
 
 	@GetMapping("customers/staff_id/{id}")
 	public List<Customer> getCustomerByStaffId(@PathVariable Long id) {
-		List<Customer> list  = staffDAO.findById(id).get().getCustomers();
-		Collections.sort(list, ( s1,  s2) -> {
+		List<Customer> list = staffDAO.findById(id).get().getCustomers();
+		for (Customer customer : list) {
+			int age = customerDAO.getAgeById(customer.getId());
+			List<CustomerGroup> existing = customer.getGroups();
+
+			for (CustomerGroup temp : existing) {
+				if (temp.getIdGroup() == 1) {
+					CustomerGroup tmp = customerGroupDAO.getGroupByAge(age);
+					if (temp == tmp);
+					else {
+						customerGroupDAO.updateCustomerGroup(tmp.getId(), customer.getId(), temp.getId());
+					}
+				}
+				if (temp.getIdGroup() == 2) {
+					CustomerGroup tmp = customerGroupDAO.getGroupByPoint(customer.getPoint());
+					if (temp == tmp)
+						;
+					else {
+						customerGroupDAO.updateCustomerGroup(tmp.getId(), customer.getId(), temp.getId());
+					}
+				}
+			}
+		}
+
+		Collections.sort(list, (s1, s2) -> {
 			return s1.getUpdateDate().compareTo(s2.getUpdateDate());
 		});
 		Collections.reverse(list);
 		return list;
 	}
+
 	@GetMapping("customers/orders-his/{id}")
-	public List<Orders> getTransactionHistory(@PathVariable Long id){
-		List<Orders> list =  customerDAO.findById(id).get().getOrders();
-		Collections.sort(list, (s1,s2)->{
+	public List<Orders> getTransactionHistory(@PathVariable Long id) {
+		Customer customer = customerDAO.findById(id).get();
+		List<Orders> list = customer.getOrders();
+		Collections.sort(list, (s1, s2) -> {
 			return s1.getUpdateDate().compareTo(s2.getUpdateDate());
 		});
 		Collections.reverse(list);
 		return list;
 	}
+
 	@GetMapping("total-customers")
 	public Integer totalCustomer() {
 		return customerDAO.getTotalCustomer();
 	}
+	@GetMapping("customers/exportxlsx")
+	public ResponseEntity<Object> downloadFile() throws IOException {
+		XlsxHandler handler = new XlsxHandler();
+		CustomerService service = new CustomerService();
+		service.setHandler(handler);
+		service.setCustomerDAO(customerDAO);
+		
+		InputStreamResource resource = new InputStreamResource(new FileInputStream(service.fileExport()));
+	      HttpHeaders headers = new HttpHeaders();
+	      
+	      headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", service.fileExport().getName()));
+	      headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+	      headers.add("Pragma", "no-cache");
+	      headers.add("Expires", "0");
+	      
+	      ResponseEntity<Object> 
+	      responseEntity = ResponseEntity.ok().headers(headers).contentLength(
+	    		  service.fileExport().length()).contentType(MediaType.parseMediaType("application/txt")).body(resource);
+	      
+	      return responseEntity;
+		
+	}
+
 }

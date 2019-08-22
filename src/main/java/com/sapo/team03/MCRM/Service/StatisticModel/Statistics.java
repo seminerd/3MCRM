@@ -5,6 +5,8 @@ public class Statistics {
 	private int totalStaffs;
 	private int totalOrders;
 	private Double revenue;
+	private int totalLead;
+	private int totalOpp;
 	public int getTotalCustomers() {
 		return totalCustomers;
 	}
@@ -28,6 +30,20 @@ public class Statistics {
 	}
 	public void setRevenue(Double revenue) {
 		this.revenue = revenue;
+	}
+	
+	public int getTotalLead() {
+		return totalLead;
+	}
+	public void setTotalLead(int totalLead) {
+		this.totalLead = totalLead;
+	}
+
+	public int getTotalOpp() {
+		return totalOpp;
+	}
+	public void setTotalOpp(int totalOpp) {
+		this.totalOpp = totalOpp;
 	}
 	public Statistics() {
 	}

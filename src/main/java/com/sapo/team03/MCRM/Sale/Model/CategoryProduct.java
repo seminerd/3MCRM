@@ -1,10 +1,11 @@
-package com.sapo.team03.MCRM.Model;
+package com.sapo.team03.MCRM.Sale.Model;
 
 import java.util.Set;
 
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.sapo.team03.MCRM.Marketing.Model.Lead;
 
 @Entity
 @Table(name = "category_product")

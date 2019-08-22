@@ -1,6 +1,7 @@
-package com.sapo.team03.MCRM.Model;
+package com.sapo.team03.MCRM.Marketing.Model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -25,10 +26,13 @@ public class CustomerGroup {
 	@Column(name = "note")
 	private String note;
 	@JsonBackReference("n")
-	@OneToMany(mappedBy = "group")
+	@ManyToMany(mappedBy = "groups")
 	private Set<Customer> customers;
 	@Column(name = "update_date")
 	private Date updateDate;
+	@Column(name = "id_group")
+	private int idGroup;
+
 	public CustomerGroup() {
 		
 	}
@@ -95,6 +99,21 @@ public class CustomerGroup {
 
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
+	}
+
+	public int getIdGroup() {
+		return idGroup;
+	}
+
+	public void setIdGroup(int idGroup) {
+		this.idGroup = idGroup;
+	}
+	
+	public boolean checkExistingGroup(List<CustomerGroup> list) {
+		for (CustomerGroup temp : list) {
+			if(temp.getId()==this.getId()) return true;
+		}
+		return false;
 	}
 	
 }

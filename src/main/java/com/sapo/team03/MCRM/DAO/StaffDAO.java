@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sapo.team03.MCRM.Model.Staff;
+import com.sapo.team03.MCRM.Management.Model.Staff;
 
 @Repository
 public interface StaffDAO extends JpaRepository<Staff, Long> {

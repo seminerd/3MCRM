@@ -1,4 +1,4 @@
-package com.sapo.team03.MCRM.Model;
+package com.sapo.team03.MCRM.Sale.Model;
 
 import javax.persistence.*;
 

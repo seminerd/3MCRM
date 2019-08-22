@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,12 +17,19 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sapo.team03.MCRM.DAO.CategoryProductDAO;
 import com.sapo.team03.MCRM.DAO.LeadDAO;
-import com.sapo.team03.MCRM.Model.Lead;
+import com.sapo.team03.MCRM.DAO.LeadSourceDAO;
+import com.sapo.team03.MCRM.Marketing.Model.Lead;
 import com.sapo.team03.MCRM.Service.LeadService;
+import com.sapo.team03.MCRM.Service.MailService;
 import com.sapo.team03.MCRM.Service.XlsxHandler;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class LeadController {
+	@Autowired
+	LeadSourceDAO sourceDAO;
+	@Autowired
+	MailService mailService;
 	@Autowired
 	LeadDAO leadDAO;
 	@Autowired
@@ -45,8 +53,10 @@ public class LeadController {
 		try {
 			handler.receiveFile();
 			service.setHandler(handler);
+			service.setSourceDAO(sourceDAO);
 			service.setLeadDAO(leadDAO);
 			service.setCategoryDAO(categoryDAO);
+			service.setMailService(mailService);
 			service.addLeads();
 		} catch (IOException e) {
 

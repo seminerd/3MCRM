@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sapo.team03.MCRM.DAO.StaffDAO;
-//import com.sapo.team03.MCRM.Exception.UsernameNotFound;
-import com.sapo.team03.MCRM.Model.Staff;
+import com.sapo.team03.MCRM.Management.Model.Staff;
 import com.sapo.team03.MCRM.Utils.Utilities;
 @CrossOrigin(origins="*")
 @RestController(value = "staffs")

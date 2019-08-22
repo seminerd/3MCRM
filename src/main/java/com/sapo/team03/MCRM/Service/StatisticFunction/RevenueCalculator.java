@@ -11,7 +11,9 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.sapo.team03.MCRM.DAO.ConversionDAO;
 import com.sapo.team03.MCRM.DAO.CustomerDAO;
+import com.sapo.team03.MCRM.DAO.LeadDAO;
 import com.sapo.team03.MCRM.DAO.OrderDAO;
 import com.sapo.team03.MCRM.DAO.StaffDAO;
 import com.sapo.team03.MCRM.Service.StatisticModel.DaySale;
@@ -27,6 +29,10 @@ public class RevenueCalculator implements Calculator {
 	StaffDAO staffDAO;
 	@Autowired
 	CustomerDAO customerDAO;
+	@Autowired
+	LeadDAO leadDAO;
+	@Autowired
+	ConversionDAO conversionDAO;
 	@PersistenceContext
 	EntityManager entityManager;
 
@@ -161,7 +167,29 @@ public class RevenueCalculator implements Calculator {
 		statistics.setTotalStaffs(staffDAO.getTotalStaff());
 		statistics.setTotalOrders(orderDAO.getTotalOrders());
 		statistics.setRevenue(orderDAO.getRevenue());
+		statistics.setTotalLead(leadDAO.getTotalLead() + conversionDAO.totalConvertLead());
+		statistics.setTotalOpp(leadDAO.getTotalOpportunity()+conversionDAO.totalConvertOpp());
 		return statistics;
+	}
+
+	@Override
+	public List<StaffSale> getCustomerSpending() {
+		List<StaffSale> customer = new ArrayList<StaffSale>();
+		List<Object[]> list = entityManager.createQuery("select id, name from Customer", Object[].class).getResultList();		
+		for (Object[] objects : list) {
+			StaffSale e = new StaffSale();
+			e.setId((Long)objects[0]);
+			e.setName((String)objects[1]);
+			e.setValues(orderDAO.getCustomerSpending(e.getId()));
+			if (e.getValues() == null)
+				e.setValues(0.0);
+			customer.add(e);
+		}
+		Collections.sort(customer, (s1, s2) -> {
+			return s1.getValues().compareTo(s2.getValues());
+		});
+		Collections.reverse(customer);
+		return customer;
 	}
 
 }

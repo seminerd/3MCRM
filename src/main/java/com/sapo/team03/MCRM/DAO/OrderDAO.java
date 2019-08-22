@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.sapo.team03.MCRM.Model.Orders;
+import com.sapo.team03.MCRM.Sale.Model.Orders;
 
 @Repository
 public interface OrderDAO extends JpaRepository<Orders, Long> {
@@ -37,4 +37,13 @@ public interface OrderDAO extends JpaRepository<Orders, Long> {
 	
 	@Query(value = "select sum(total_money) from orders where state = 1", nativeQuery = true)
 	Double getRevenue();
+	
+	@Query(value = "select sum(total_money) from orders where id_customer_order = ?1", nativeQuery = true)
+	Double getCusSpending(Long id);
+	
+	@Query(value = "select sum(total_money) from orders \n" + 
+			"	where id_customer_order = ?1 \n" + 
+			"		and month(date_ship) = month(date_sub(curdate(), interval 1 month))\n" + 
+			"			and year(date_ship) = year(date_sub(curdate(), interval 1 month))", nativeQuery = true)
+	public Double getCustomerSpending(Long id);
 }

@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.sapo.team03.MCRM.Model.CategoryProduct;
-import com.sapo.team03.MCRM.Model.Product;
+import com.sapo.team03.MCRM.Sale.Model.CategoryProduct;
+import com.sapo.team03.MCRM.Sale.Model.Product;
 
 @Repository
 public interface ProductDAO extends JpaRepository<Product, Long>{

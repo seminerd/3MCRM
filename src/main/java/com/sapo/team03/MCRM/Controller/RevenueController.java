@@ -52,4 +52,8 @@ public class RevenueController {
 	public Statistics getStatistics() {
 		return revCalc.getStatistics();
 	}
+	@GetMapping("customersale")
+	public List<StaffSale> getCustomerMonthlySpending(){
+		return revCalc.getCustomerSpending().stream().limit(5).collect(Collectors.toList());
+	}
 }

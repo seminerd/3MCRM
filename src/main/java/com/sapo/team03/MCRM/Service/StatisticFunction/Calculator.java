@@ -25,4 +25,6 @@ public interface Calculator {
 	List<ProductSale> getTotalProductSold();
 
 	Statistics getStatistics();
+	
+	List<StaffSale> getCustomerSpending();
 }

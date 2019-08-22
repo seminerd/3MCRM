@@ -1,8 +1,11 @@
-package com.sapo.team03.MCRM.Model;
+package com.sapo.team03.MCRM.Sale.Model;
 
 import java.time.LocalDate;
 
 import javax.persistence.*;
+
+import com.sapo.team03.MCRM.Management.Model.Staff;
+import com.sapo.team03.MCRM.Marketing.Model.Customer;
 
 @Entity
 @Table(name = "transaction_customer")
