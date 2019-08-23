@@ -15,13 +15,13 @@ public interface LeadDAO extends JpaRepository<Lead, Long> {
 	@Modifying
 	@Query(value = "delete from lead where create_date > now() - interval 10 minute and source is null", nativeQuery = true)
 	void undo();
-	@Query(value = "select * from lead where email = ?1", nativeQuery = true)
+//	@Query(value = "select * from lead where email = ?1", nativeQuery = true)
 	public Lead findByEmail(String email);
 	@Transactional
 	@Modifying
 	@Query(value = "delete from lead where email = ?1", nativeQuery = true)
 	public void deleteByEmail(String email);
-	@Query(value = "select * from lead where phone = ?1", nativeQuery = true)
+//	@Query(value = "select * from lead where phone = ?1", nativeQuery = true)
 	public Lead findByPhone(String phone);
 	@Transactional
 	@Modifying

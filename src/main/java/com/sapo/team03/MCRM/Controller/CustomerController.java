@@ -71,7 +71,7 @@ public class CustomerController {
 		}
 
 		if (customer.getPhone() != null) {
-			Customer cus = customerDAO.findByPhonenumber(customer.getPhone());
+			Customer cus = customerDAO.findByPhone(customer.getPhone());
 			if (cus != null)
 				throw new DuplicatePhoneNumber(cus.getPhone());
 		}
@@ -165,7 +165,9 @@ public class CustomerController {
 
 	@GetMapping("customers/list")
 	public List<Customer> getCustomList(@RequestParam(value = "page", required = false) Integer page,
-			@RequestParam(value = "size", required = false) Integer size) {
+			@RequestParam(value = "size", required = false) Integer size, 
+			@RequestParam(value = "email", required = false) String email) {
+		if(email == null) {
 		if (page != null && size == null)
 			return customerDAO.findAll(PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "updateDate")))
 					.getContent();
@@ -174,6 +176,14 @@ public class CustomerController {
 					.getContent();
 		else {
 			return customerDAO.findAll(Sort.by(Sort.Direction.DESC, "updateDate"));
+		}}
+		else {
+			List<Customer> list = staffDAO.findByEmail(email).getCustomers();
+			Collections.sort(list, (s1, s2) -> {
+				return s1.getUpdateDate().compareTo(s2.getUpdateDate());
+			});
+			Collections.reverse(list);
+			return list;
 		}
 
 	}

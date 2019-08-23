@@ -15,11 +15,10 @@ import com.sapo.team03.MCRM.Marketing.Model.Customer;
 
 @Repository
 public interface CustomerDAO extends JpaRepository<Customer, Long>,MailReceiverDAO {
-	@Transactional
-	@Query(value="select * from customer where email = ?", nativeQuery = true)
+//	@Query(value="select * from customer where email = ?", nativeQuery = true)
 	public Customer findByEmail(String email);
-	@Query(value = "select * from customer where phone = ?", nativeQuery = true)
-	public Customer findByPhonenumber(String phoneNumber);
+//	@Query(value = "select * from customer where phone = ?", nativeQuery = true)
+	public Customer findByPhone(String phoneNumber);
 	@Query(value = "select * from customer where staff_id = ?", nativeQuery = true)
 	public List<Customer> getCustomersByStaffId(Long id);
 	@Query(value="select * from customer", nativeQuery = true)

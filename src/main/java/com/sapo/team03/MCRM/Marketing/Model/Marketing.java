@@ -27,11 +27,12 @@ public class Marketing {
 	private LocalDate startDate;
 	@Column(name = "date_finish")
 	private LocalDate finishDate;
-	@Column(name = "state")
-	private Integer state;
 	@Column(name = "result")
-	private Integer result;
-	
+	private Double result;
+	@Column(name = "content")
+	private String content;
+	@Column(name = "goal")
+	private String goal;
 	@ManyToMany
 	@JoinTable(name = "ob_strategy", 
 	joinColumns = @JoinColumn(name = "id_strategy"),
@@ -66,19 +67,11 @@ public class Marketing {
 		this.finishDate = finishDate;
 	}
 
-	public Integer getState() {
-		return state;
-	}
-
-	public void setState(Integer state) {
-		this.state = state;
-	}
-
-	public Integer getResult() {
+	public Double getResult() {
 		return result;
 	}
 
-	public void setResult(Integer result) {
+	public void setResult(Double result) {
 		this.result = result;
 	}
 
@@ -93,6 +86,21 @@ public class Marketing {
 	public long getId() {
 		return id;
 	}
-	
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getGoal() {
+		return goal;
+	}
+
+	public void setGoal(String goal) {
+		this.goal = goal;
+	}
 	
 }

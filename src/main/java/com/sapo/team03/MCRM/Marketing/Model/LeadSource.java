@@ -28,8 +28,6 @@ public class LeadSource {
 	private int total;
 	@Column(name = "cnvrt")
 	private int convert;
-	@Column(name = "rate")
-	private double rate;
 	
 	@OneToMany(mappedBy = "source")
 	@JsonBackReference("lead")
@@ -64,12 +62,6 @@ public class LeadSource {
 	}
 	public void setConvert(int convert) {
 		this.convert = convert;
-	}
-	public double getRate() {
-		return rate;
-	}
-	public void setRate(double rate) {
-		this.rate = rate;
 	}
 	public LeadSource() {
 		this.convert = 0;

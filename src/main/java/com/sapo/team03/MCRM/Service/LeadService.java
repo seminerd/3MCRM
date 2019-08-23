@@ -124,9 +124,13 @@ public class LeadService {
 			Lead lead = new Lead();
 			Row row = itr.next();
 			if (row.getCell(0) != null) {
-				assignLead(row, lead);
-				leadDAO.save(lead);
-				Utilities.log("Entity added to DB");
+				try {
+					assignLead(row, lead);
+					leadDAO.save(lead);
+					Utilities.log("Entity added to DB");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		} while (itr.hasNext());
 	}

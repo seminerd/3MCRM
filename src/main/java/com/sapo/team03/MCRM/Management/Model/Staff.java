@@ -35,8 +35,6 @@ public class Staff {
 	private Integer gender;
 	@Column(name = "description")
 	private String description;
-	@Column(name = "role")
-	private Integer role;
 	@OneToMany(mappedBy = "staff")
 	@JsonBackReference("c")
 	private List<Customer> customers;
@@ -48,7 +46,8 @@ public class Staff {
 	private Set<CustomerTransaction> transactions;
 	@Column(name = "update_date")
 	private Date updateDate;
-	
+	@Column(name = "role")
+	private String role;
 	public Staff() {
 		
 	}
@@ -103,14 +102,6 @@ public class Staff {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Integer getRole() {
-		return role;
-	}
-
-	public void setRole(Integer role) {
-		this.role = role;
 	}
 
 	public List<Customer> getCustomers() {
@@ -169,6 +160,14 @@ public class Staff {
 
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 	
 }
