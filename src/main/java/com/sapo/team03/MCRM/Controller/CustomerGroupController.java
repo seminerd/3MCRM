@@ -4,10 +4,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +23,12 @@ public class CustomerGroupController {
 	
 	@GetMapping("customer-group/list")
 	public List<CustomerGroup> getCustomerGroupList(){
-		return customerGroupDAO.findAll(Sort.by(Sort.Direction.DESC, "updateDate"));
+		return customerGroupDAO.findAll();
+	}
+	
+	@GetMapping("vinh")
+	public List<CustomerGroup> getGroup(){
+		return customerGroupDAO.getCustomerGroup();
 	}
 	
 	@GetMapping("customer-group/{id}")
@@ -41,5 +46,11 @@ public class CustomerGroupController {
 		if(customerGroup.getNote() != null) cg.setNote(customerGroup.getNote());
 		cg.setUpdateDate(new Date());
 		return customerGroupDAO.saveAndFlush(cg);
+	}
+	@PostMapping("customer-group/add")
+	public CustomerGroup addGroup(@RequestBody CustomerGroup customerGroup) {
+		customerGroup.setIdGroup(3);
+		customerGroup.setUpdateDate(new Date());
+		return customerGroupDAO.save(customerGroup);
 	}
 }

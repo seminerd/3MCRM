@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,4 +30,12 @@ public interface CustomerDAO extends JpaRepository<Customer, Long>,MailReceiverD
 	public Integer getAgeById(Long id);
 	@Query(value = "select timestampdiff(year, ?1 , curdate()) ", nativeQuery = true)
 	public Integer getAgeByDate(Date date);
+	@Query(value = "select count(*) from customer where id in (\n" + 
+			"	select id_customer_order from orders group by(id_customer_order) having count(id) > 1\n" + 
+			")", nativeQuery = true)
+	public int getMoreThanTwoOrders();
+	@Transactional
+	@Modifying
+	@Query(value = "update lead_source set cnvrt = cnvrt + 1 where id = ?1", nativeQuery = true)
+	public void updateLeadSource(Long id);
 }

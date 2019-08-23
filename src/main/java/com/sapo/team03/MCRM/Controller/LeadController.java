@@ -1,14 +1,18 @@
 package com.sapo.team03.MCRM.Controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +23,7 @@ import com.sapo.team03.MCRM.DAO.CategoryProductDAO;
 import com.sapo.team03.MCRM.DAO.LeadDAO;
 import com.sapo.team03.MCRM.DAO.LeadSourceDAO;
 import com.sapo.team03.MCRM.Marketing.Model.Lead;
+import com.sapo.team03.MCRM.Marketing.Model.LeadSource;
 import com.sapo.team03.MCRM.Service.LeadService;
 import com.sapo.team03.MCRM.Service.MailService;
 import com.sapo.team03.MCRM.Service.XlsxHandler;
@@ -36,14 +41,16 @@ public class LeadController {
 	CategoryProductDAO categoryDAO;
 
 	@GetMapping("/lead/list")
-	public List<Lead> getListLead(@RequestParam(value = "page", required = false) Integer page,
-			@RequestParam(value = "size", required = false) Integer size) {
-		if (page != null && size == null)
-			return leadDAO.findAll(PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "updateDate"))).getContent();
-		if (page != null && size != null)
-			return leadDAO.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateDate"))).getContent();
-		else
-			return leadDAO.findAll();
+	public List<Lead> getListLead(@RequestParam(value = "opportunity", required = false) Integer opp) {
+		List<Lead> list = new ArrayList<Lead>();
+		if(opp!= null && opp == 0) list =  leadDAO.getLead();
+		else if( opp!= null && opp == 1 ) list =  leadDAO.getOpportunity();
+		else list = leadDAO.findAll();
+		Collections.sort(list, (s1, s2) -> {
+			return s1.getCreate_date().compareTo(s2.getCreate_date());
+		});
+		Collections.reverse(list);
+		return list;
 	}
 
 	@RequestMapping(value = "/lead/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -63,6 +70,24 @@ public class LeadController {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	@PostMapping("lead/add")
+	public Lead addLead(@RequestBody Lead lead) {
+		if(lead.getName()==null) throw new RuntimeException("Name can not be null");
+		return leadDAO.saveAndFlush(lead);
+	}
+
+	@DeleteMapping("lead/delete/{id}")
+	public void deleteLead(@PathVariable Long id) {
+		leadDAO.deleteById(id);
+	}
+	@DeleteMapping("lead/delete")
+	public void undo(){
+		leadDAO.undo();
+	}
+	@GetMapping("source/list")
+	public List<LeadSource> getListSource(){
+		return sourceDAO.findAll();
 	}
 
 }

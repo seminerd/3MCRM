@@ -74,4 +74,13 @@ public class StaffController {
 		staffDAO.deleteById(id);
 	}
 	
+	@PutMapping("change-password/{id}")
+	public Staff changePassword(@PathVariable Long id, Staff staff) {
+		Staff sta = staffDAO.findById(id).get();
+		String encoded = BCrypt.hashpw(staff.getPassword(), BCrypt.gensalt());
+		sta.setPassword(encoded);
+		sta.setUpdateDate(new Date());
+		return staffDAO.saveAndFlush(sta);
+	}
+	
 }

@@ -59,7 +59,7 @@ public class XlsxHandler {
 	public String writeCustomersToFile(List<Customer> customers) throws IOException {
 		Workbook workbook = new XSSFWorkbook();
 		Sheet sheet = workbook.createSheet("Customers list " + LocalDate.now());
-		int rowNum = 1;
+		int rowNum = 0;
 
 		for (Customer cust : customers) {
 			Row row = sheet.createRow(rowNum++);
