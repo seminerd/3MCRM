@@ -34,7 +34,10 @@ public class StaffController {
 		if(page != null && size == null) return staffDAO.findAll(PageRequest.of(page, 20)).getContent();
 		return staffDAO.findAll(Sort.by(Sort.Direction.DESC, "updateDate"));
 	}
-
+	@GetMapping("staffs")
+	public Staff getStaffByEmail(@RequestParam(value = "email", required = true) String email) {
+		return staffDAO.findByEmail(email);
+	}
 	@PostMapping("staffs/add")
 	public Staff addStaff(@RequestBody Staff staff) {
 		String encoded = BCrypt.hashpw(staff.getPassword(), BCrypt.gensalt());
