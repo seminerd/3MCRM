@@ -236,5 +236,18 @@ public class CustomerController {
 	      return responseEntity;
 		
 	}
-
+	@GetMapping("customer-by-group/{id}")
+	public List<Customer> getCustomerByGroup(@PathVariable Long id ,@RequestParam(value = "staff", required = false)Long staff){
+		List<Customer> list = new ArrayList<Customer>();
+		if(staff== null) {
+			list = customerGroupDAO.findById(id).get().getCustomers();
+		}
+		else list = customerDAO.getCustomerByGroup(staff, id);
+		Collections.sort(list, (s1, s2) -> {
+			return s1.getUpdateDate().compareTo(s2.getUpdateDate());
+		});
+		Collections.reverse(list);
+		return list;
+	}
+	
 }

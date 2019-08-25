@@ -169,6 +169,7 @@ public class RevenueCalculator implements Calculator {
 		statistics.setRevenue(orderDAO.getRevenue());
 		statistics.setTotalLead(leadDAO.getTotalLead() + conversionDAO.totalConvertLead());
 		statistics.setTotalOpp(leadDAO.getTotalOpportunity()+conversionDAO.totalConvertOpp());
+		statistics.setBack(Double.valueOf(customerDAO.moreThanTwoOrders())/customerDAO.getTotalCustomer()*100);
 		return statistics;
 	}
 

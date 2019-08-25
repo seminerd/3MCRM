@@ -7,6 +7,7 @@ public class Statistics {
 	private Double revenue;
 	private int totalLead;
 	private int totalOpp;
+	private double back;
 	public int getTotalCustomers() {
 		return totalCustomers;
 	}
@@ -44,6 +45,13 @@ public class Statistics {
 	}
 	public void setTotalOpp(int totalOpp) {
 		this.totalOpp = totalOpp;
+	}
+	
+	public double getBack() {
+		return back;
+	}
+	public void setBack(double back) {
+		this.back = back;
 	}
 	public Statistics() {
 	}

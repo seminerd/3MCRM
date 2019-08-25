@@ -32,9 +32,14 @@ public interface CustomerDAO extends JpaRepository<Customer, Long>,MailReceiverD
 	@Query(value = "select count(*) from customer where id in (\n" + 
 			"	select id_customer_order from orders group by(id_customer_order) having count(id) > 1\n" + 
 			")", nativeQuery = true)
-	public int getMoreThanTwoOrders();
+	public int moreThanTwoOrders();
 	@Transactional
 	@Modifying
 	@Query(value = "update lead_source set cnvrt = cnvrt + 1 where id = ?1", nativeQuery = true)
 	public void updateLeadSource(Long id);
+	@Query(value = "select c.* from customer c, cus_group cg "
+			+ "where c.id = cg.id_cus "
+			+ "and c.staff_id = ?1 and cg.id_group = ?2", nativeQuery = true)
+	public List<Customer> getCustomerByGroup(Long staff_id, Long group_id);
+
 }
