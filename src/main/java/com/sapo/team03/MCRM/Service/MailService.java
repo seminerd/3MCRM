@@ -44,19 +44,18 @@ public class MailService {
 
 	}
 
-	void sendMail(String name ,long formId, String toMail) {
+	public void sendMail(String name, long formId, String toMail) {
 		Email email = new Email();
 		email.setForm(formDAO.findById(formId).get());
 		email.setFromMail(prop.getProperty("mail.smtp.adminEmail"));
 		email.setToMail(toMail);
 		try {
-			
 
 			Message message = new MimeMessage(session);
 //			message.setFrom(new InternetAddress(email.getFromMail()));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email.getToMail()));
 			message.setSubject(email.getForm().getSubject());
-			message.setText("Xin chao "+name+", \n"+email.getForm().getContent());
+			message.setText("Xin chao " + name + ", \n" + email.getForm().getContent());
 
 			Transport.send(message);
 
