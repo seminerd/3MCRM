@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sapo.team03.MCRM.DAO.OrderDAO;
 import com.sapo.team03.MCRM.DAO.OrderDetailDAO;
 import com.sapo.team03.MCRM.DAO.ProductDAO;
+import com.sapo.team03.MCRM.DAO.StaffDAO;
 import com.sapo.team03.MCRM.Sale.Model.OrderDetail;
 import com.sapo.team03.MCRM.Sale.Model.Orders;
 import com.sapo.team03.MCRM.Sale.Model.Product;
@@ -30,10 +31,16 @@ public class OrderController {
 	ProductDAO productDAO;
 	@Autowired
 	OrderDetailDAO orderDetailDAO;
+	@Autowired
+	StaffDAO staffDAO;
 	
 	@GetMapping("orders/list")
 	public List<Orders> getOrderList(){
 		return orderDAO.findAll(Sort.by(Sort.Direction.DESC, "updateDate"));
+	}
+	@GetMapping("orders/list/{id}")
+	public Set<Orders> getOrderByaStaff(@PathVariable Long id){
+		return staffDAO.findById(id).get().getOrders();
 	}
 	@GetMapping("orderdetails/{id}")
 	public List<OrderDetail> getOrderDetails(@PathVariable Long id){
