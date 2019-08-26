@@ -1,5 +1,7 @@
 package com.sapo.team03.MCRM.Controller;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -39,8 +41,14 @@ public class OrderController {
 		return orderDAO.findAll(Sort.by(Sort.Direction.DESC, "updateDate"));
 	}
 	@GetMapping("orders/list/{id}")
-	public Set<Orders> getOrderByaStaff(@PathVariable Long id){
-		return staffDAO.findById(id).get().getOrders();
+	public List<Orders> getOrderByaStaff(@PathVariable Long id){
+		Set<Orders> orders =  staffDAO.findById(id).get().getOrders();
+		List<Orders> list = new ArrayList<>(orders);
+		Collections.sort(list, (s1, s2) -> {
+			return s1.getUpdateDate().compareTo(s2.getUpdateDate());
+		});
+		Collections.reverse(list);
+		return list;
 	}
 	@GetMapping("orderdetails/{id}")
 	public List<OrderDetail> getOrderDetails(@PathVariable Long id){

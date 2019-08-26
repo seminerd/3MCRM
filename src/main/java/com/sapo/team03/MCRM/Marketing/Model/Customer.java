@@ -49,9 +49,6 @@ public class Customer {
 	private Staff staff;
 	@Column(name = "note")
 	private String note;
-//	@JsonBackReference("y")
-//	@OneToMany(mappedBy = "customerMail")
-//	private Set<Mail> mail;
 	@JsonBackReference("a")
 	@OneToMany(mappedBy = "customerOrder")
 	private List<Orders> orders;

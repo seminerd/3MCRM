@@ -59,7 +59,6 @@ public class CustomerController {
 	OrderDAO orderDAO;
 	@Autowired
 	ConversionDAO conversionDAO;
-	
 
 	@PostMapping("customers/add")
 	public Customer addCustomer(@RequestBody Customer customer,
@@ -165,19 +164,19 @@ public class CustomerController {
 
 	@GetMapping("customers/list")
 	public List<Customer> getCustomList(@RequestParam(value = "page", required = false) Integer page,
-			@RequestParam(value = "size", required = false) Integer size, 
+			@RequestParam(value = "size", required = false) Integer size,
 			@RequestParam(value = "email", required = false) String email) {
-		if(email == null) {
-		if (page != null && size == null)
-			return customerDAO.findAll(PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "updateDate")))
-					.getContent();
-		if (page != null && size != null)
-			return customerDAO.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateDate")))
-					.getContent();
-		else {
-			return customerDAO.findAll(Sort.by(Sort.Direction.DESC, "updateDate"));
-		}}
-		else {
+		if (email == null) {
+			if (page != null && size == null)
+				return customerDAO.findAll(PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "updateDate")))
+						.getContent();
+			if (page != null && size != null)
+				return customerDAO.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateDate")))
+						.getContent();
+			else {
+				return customerDAO.findAll(Sort.by(Sort.Direction.DESC, "updateDate"));
+			}
+		} else {
 			List<Customer> list = staffDAO.findByEmail(email).getCustomers();
 			Collections.sort(list, (s1, s2) -> {
 				return s1.getUpdateDate().compareTo(s2.getUpdateDate());
@@ -214,40 +213,44 @@ public class CustomerController {
 	public Integer totalCustomer() {
 		return customerDAO.getTotalCustomer();
 	}
+
 	@GetMapping("customers/exportxlsx")
 	public ResponseEntity<Object> downloadFile() throws IOException {
 		XlsxHandler handler = new XlsxHandler();
 		CustomerService service = new CustomerService();
 		service.setHandler(handler);
 		service.setCustomerDAO(customerDAO);
-		
+
 		InputStreamResource resource = new InputStreamResource(new FileInputStream(service.fileExport()));
-	      HttpHeaders headers = new HttpHeaders();
-	      
-	      headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", service.fileExport().getName()));
-	      headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-	      headers.add("Pragma", "no-cache");
-	      headers.add("Expires", "0");
-	      
-	      ResponseEntity<Object> 
-	      responseEntity = ResponseEntity.ok().headers(headers).contentLength(
-	    		  service.fileExport().length()).contentType(MediaType.parseMediaType("application/txt")).body(resource);
-	      Utilities.log("Download completed");
-	      return responseEntity;
-		
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.add("Content-Disposition",
+				String.format("attachment; filename=\"%s\"", service.fileExport().getName()));
+		headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+		headers.add("Pragma", "no-cache");
+		headers.add("Expires", "0");
+
+		ResponseEntity<Object> responseEntity = ResponseEntity.ok().headers(headers)
+				.contentLength(service.fileExport().length()).contentType(MediaType.parseMediaType("application/txt"))
+				.body(resource);
+		Utilities.log("Download completed");
+		return responseEntity;
+
 	}
+
 	@GetMapping("customer-by-group/{id}")
-	public List<Customer> getCustomerByGroup(@PathVariable Long id ,@RequestParam(value = "staff", required = false)Long staff){
+	public List<Customer> getCustomerByGroup(@PathVariable Long id,
+			@RequestParam(value = "staff", required = false) Long staff) {
 		List<Customer> list = new ArrayList<Customer>();
-		if(staff== null) {
+		if (staff == null) {
 			list = customerGroupDAO.findById(id).get().getCustomers();
-		}
-		else list = customerDAO.getCustomerByGroup(staff, id);
+		} else
+			list = customerDAO.getCustomerByGroup(staff, id);
 		Collections.sort(list, (s1, s2) -> {
 			return s1.getUpdateDate().compareTo(s2.getUpdateDate());
 		});
 		Collections.reverse(list);
 		return list;
 	}
-	
+
 }
